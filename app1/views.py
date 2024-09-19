@@ -263,8 +263,9 @@ def logout(request):
 
 
 
+
 # Sign Up
-def signup(request):
+def signup1(request):
     if request.method == 'POST':
         # Extract form data using request.POST.get
         #User Details
@@ -285,7 +286,9 @@ def signup(request):
         subscription_type = request.POST.get('subscription_type')
         company_type = request.POST.get('company_type')
         # Founders Details
-        founder_name = request.POST.get('founder_name')
+        #founder_name = request.POST.get('founder_name')
+        founder_name = request.POST.get('founder_firstname')
+
         founder_email = request.POST.get('founder_email')
         founder_linkedin_url = request.POST.get('founder_linkedin_url')
         founder_phone_number = request.POST.get('founder_phone_number')
@@ -313,6 +316,110 @@ def signup(request):
             firstname=firstname,
             lastname=lastname,
             password=password,
+            company_type = company_type
+
+           
+        )
+        
+        user.save()
+
+        # Ensure the user was saved correctly
+        if user.pk:
+            # Create and save Company object
+            company = Company(
+                user_id=user,  # This should match the foreign key field in Company model
+                name=company_name,
+                email=company_email,
+                website_url=company_website_url,
+                linkedin_url=company_linkedin_url,
+                subscription_type = subscription_type,
+                #company_type = company_type
+                
+            )
+            
+            company.save()
+            print(company_type,'company_type')
+
+            # Ensure the company was saved correctly
+            if company.pk:
+                company_id = Company.objects.get(company_id = company.pk)
+                founder =Founder(
+                    company_id = company_id,
+                    name=founder_name,
+                
+                    linkedin_url=founder_linkedin_url,
+                    
+                    short_profile = founder_short_profile,
+                    photo = founder_photo
+                )
+                founder.save()
+                messages.error(request,'User Created Succesfully')
+                return redirect('signup')
+                
+            else:
+                messages.error(request,'Something went wrong please try again later')
+                return redirect('signup')
+                
+        else:
+            messages.error(request,'Something went wrong please try again later')
+            return redirect('signup')
+           
+    else:
+        return render(request, 'sign_up.html')
+
+
+
+# Sign Up
+def signup(request):
+    if request.method == 'POST':
+        # Extract form data using request.POST.get
+        #User Details
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        phone_number = request.POST.get('phone_number')
+        linkedin_url = request.POST.get('linkedin_url', '')  # Optional field
+        firstname = request.POST.get('firstname')
+        lastname = request.POST.get('lastname', '')  # Optional field
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+        
+        # Company Details
+        company_name = request.POST.get('company_name')
+        company_email = request.POST.get('company_email')
+        company_website_url = request.POST.get('company_website_url')
+        company_linkedin_url = request.POST.get('company_linkedin_url')
+        subscription_type = request.POST.get('subscription_type')
+        company_type = request.POST.get('company_type')
+        # Founders Details
+        founder_name = request.POST.get('founder_firstname')
+        founder_email = request.POST.get('founder_email')
+        founder_linkedin_url = request.POST.get('founder_linkedin_url')
+        founder_phone_number = request.POST.get('founder_phone_number')
+        founder_short_profile = request.POST.get('founder_short_profile')
+        founder_photo = request.FILES.get('founder_photo')
+
+        # Validate passwords
+        if password != confirm_password:
+            messages.error(request,'Passwords do not match')
+            return redirect('signup')    
+        # Validate if the username or email already exists
+        if User.objects.filter(username=username).exists() or Team.objects.filter(username=username).exists():
+            messages.error(request,'Username already exists')
+            return redirect('signup')    
+        if User.objects.filter(email=email).exists() or Team.objects.filter(email=email).exists():
+            messages.error(request,'Email already exists')
+            return redirect('signup')
+            
+        # Create and save User object
+        user = User(
+            username=username,
+            email=email,
+            phone_number=phone_number,
+            linkedin_url=linkedin_url,
+            firstname=firstname,
+            lastname=lastname,
+            password=password,
+            company_type=company_type
            
         )
         
@@ -360,6 +467,7 @@ def signup(request):
            
     else:
         return render(request, 'sign_up.html')
+
 
 
 

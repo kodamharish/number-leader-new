@@ -136,7 +136,7 @@
                     {{ msg }}
                 </div>
                 {% endfor %}
-    <div class="container p-2">
+                <div class="container p-2">
         <div class="row">
             <!-- Personal Information Card -->
             <div class="col-md-6 mb-3">
@@ -220,13 +220,15 @@
                         </div>
                         <div class="col-md-6 mb-2">
                             <div class="did-floating-label-content">
-                                <select class="did-floating-select" id="company_type" name="company_type" onchange="showCompanyTypeDetails()" required>
+
+                                <select class="did-floating-select" id="company_type" name="company_type"  required>
                                     <option value="" disabled selected>Select your option</option>
                                     <option value="Startup">Startup</option>
                                     <option value="Investor">Investor</option>
                                     <option value="CA_firm">Enablers</option>
                                 </select>
                                 <label for="company_type" class="did-floating-label">Company Type</label>
+
                             </div>
                         </div>
                         <div class="col-md-12 mb-2">
