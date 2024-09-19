@@ -1,0 +1,324 @@
+{% include './company_profile.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company News</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    .container {
+    position: relative;
+    padding: 20px 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    margin-left: 250px;
+    height: 600px;
+    overflow-y: auto;
+    margin-top: -50px; /* Move the container upwards */
+    padding-top: 0px;
+}
+
+.container::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* For Chrome/Safari/Webkit */
+}
+
+.container {
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none;  /* For Internet Explorer and Edge */
+}
+
+        body {
+            font-family: 'Arial MT Rounded';
+            overflow: hidden;
+        }
+
+        .label-text {
+            font-size: 12px;
+            color: grey;
+        }
+
+        .content-text {
+            font-size: 16px;
+        }
+
+        .news-item {
+            border-bottom: 1px solid #898888;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            position: relative;
+        }
+
+        .edit-btn,
+        .update-btn,
+        .delete-btn,
+        .cancel-btn {
+            position: absolute;
+            top: 10px;
+        }
+
+        .edit-btn,
+        .update-btn {
+            right: 120px;
+        }
+
+        .delete-btn {
+            right: 60px;
+        }
+
+        .cancel-btn {
+            right: 10px;
+        }
+
+        .add-news-btn {
+            cursor: pointer;
+            font-size: 30px;
+            color: black;
+            text-align: right;
+            margin-bottom: 20px;
+            margin-left: 1000px;
+        }
+
+        .edit-buttons {
+            display: none;
+        }
+
+        .news-summary {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .form-control {
+            border: none;
+        }
+
+        .form-control:focus {
+            border-left: 0px;
+            border-right: 0px;
+            border-top: 0px;
+            border-bottom: 1px solid black;
+            box-shadow: none;
+        }
+        .breadcrumb{
+            font-size: 16px;
+            color: black;
+            flex:1;
+            margin-top: 20px;
+            margin-left: 250px;
+            font-family: 'Arial MT Rounded';
+            align-items: space-between;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="breadcrumb">
+        <span>My Companies</span> &ndash; <span>{{ company.name }}</span> &ndash; <span class="bold-text">News</span>
+        <div class="add-news-btn" id="add-news-btn">+</div>
+    </div>
+
+    <div class="container my-5">
+       
+
+        <!-- Button to show the form -->
+        {% if news_data %}
+        
+        {% endif %}
+
+        {% if news_data %}
+        {% for i in news_data|dictsortreversed:"line_no" %}
+        {% if not i.line_no == 1 %}
+        <form id="news-form" class="mb-4" style="margin-top:-20px">
+                <div class="mb-3">
+                    <label for="newsDate" class="label-text">Date:</label>
+                    <input type="text" class="form-control content-text" id="newsDate_{{i.line_no}}" name="newsDate" value="{{i.sub_date|date:'d-m-Y'}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="summary" class="label-text">Brief Summary:</label>
+                    <textarea class="form-control content-text" name="summary" id="summary_{{i.line_no}}" rows="3"
+                        placeholder="Enter the news summary">{{i.summary}}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="link" class="label-text">Link:</label>
+                    <input type="text" class="form-control content-text" name="link" id="link_{{i.line_no}}" value="{{i.link}}" placeholder="www.example.com">
+                </div>
+                <!-- Align button to the right -->
+                <div class="text-end">
+                    <button type="button" class="btn btn-primary content-text" id="submit-news_{{i.line_no}}" onclick="handleNewsSubmit({{ i.line_no }})">Add News</button>
+                </div>
+            </form>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+
+        <!-- News Form -->
+        <form id="news-form" class="mb-4">
+            <div class="mb-3">
+                <label for="newsDate" class="label-text">Date:</label>
+                <input type="text" class="form-control content-text" id="newsDate_1" name="newsDate" {% if news_data %}{% for i in news_data %}{% if i.line_no == 1 %} value="{{i.sub_date|date:'d-m-Y'}}" {% endif %}{% endfor %}{% else %} value="{{current_date|date:'d-m-Y'}}" {% endif %} readonly>
+            </div>
+            <div class="mb-3">
+                <label for="summary" class="label-text">Brief Summary:</label>
+                <textarea class="form-control content-text" name="summary" id="summary_1" rows="3"
+                    placeholder="Enter the news summary">{% if news_data %}{% for i in news_data %}{% if i.line_no == 1 %}{{i.summary}}{% endif %}{% endfor %}{% endif %}</textarea>
+            </div>
+            <div class="mb-3">
+                <label for="link" class="label-text">Link:</label>
+                <input type="text" class="form-control content-text" name="link" id="link_1" {% if news_data %}{% for i in news_data %}{% if i.line_no == 1 %} value="{{i.link}}" {% endif %}{% endfor %}{% endif %} placeholder="www.example.com">
+            </div>
+            <!-- Align button to the right -->
+            <div class="text-end">
+                <button type="button" class="btn btn-primary content-text" id="submit-news_1" onclick="handleNewsSubmit(1)">Add News</button>
+            </div>
+        </form>
+
+        <!-- Section to display added news -->
+        <div id="news-container"></div>
+
+    </div>
+
+    {% if last_rec %}
+    <script>
+        var last_rec_1 = "{{last_rec}}";        
+    </script>
+    {% else %}
+    <script>
+        var last_rec_1 = 1
+    </script>
+    {% endif %}
+
+    <script>
+
+        let sectionCount = last_rec_1; // Initialize section count
+
+        console.log('sectionCount', sectionCount)
+
+        document.getElementById('add-news-btn').addEventListener('click', function () {
+            sectionCount++;
+            const newSectionHTML = `
+            <!-- News Form Section -->
+            <form id="news-form_${sectionCount}" class="mb-4">
+                <div class="mb-3">
+                    <label for="newsDate_${sectionCount}" class="label-text">Date:</label>
+                    <input type="text" class="form-control content-text" id="newsDate_${sectionCount}" value="{{current_date|date:'d-m-Y'}}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="summary_${sectionCount}" class="label-text">Brief Summary:</label>
+                    <textarea class="form-control content-text" id="summary_${sectionCount}" rows="3" placeholder="Enter the news summary"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="link_${sectionCount}" class="label-text">Link:</label>
+                    <input type="text" class="form-control content-text" id="link_${sectionCount}" placeholder="www.example.com">
+                </div>
+                <!-- Align button to the right -->
+                <div class="text-end">
+                    <button type="button" class="btn btn-primary content-text" id="submit-news_${sectionCount}"  onclick="handleNewsSubmit(${sectionCount})">Add News</button>
+                </div>
+            </form>
+            `;
+
+            // Insert new section after the add-news button
+            document.getElementById('add-news-btn').insertAdjacentHTML('afterend', newSectionHTML);                    
+        });
+
+        
+
+        // Function to handle news submission
+        function handleNewsSubmit(sectionId) {
+            const date = document.getElementById(`newsDate_${sectionId}`).value;
+            const summary = document.getElementById(`summary_${sectionId}`).value;
+            const link = document.getElementById(`link_${sectionId}`).value;
+
+            // Create a FormData object to send data to the server
+            const formData = new FormData();
+            formData.append('newsDate', date);
+            formData.append('summary', summary);
+            formData.append('link', link);
+            formData.append('line_no', sectionId); // Use sectionId as line number
+
+            // Make the POST request to submit the form
+            fetch("{% url 'news_post' company.company_id %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    // Handle HTTP errors
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();  // Ensure we are expecting JSON response
+            })
+            .then(data => {
+                if (data.message) {
+                    alert(data.message);
+                    // Optionally, refresh or update the news list after submission
+                    refreshNewsSection();  // Custom function to refresh the news section (if needed)
+                } else if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    alert('Unexpected response format.');
+                }
+            })
+            .catch(error => {
+                alert('Error: ' + error.message);
+            });
+        }
+
+        function refreshNewsSection() {
+            // Fetch the updated news section from the server
+            fetch("{% url 'news_post' company.company_id %}")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();  // Get the response as HTML text
+                })
+                .then(html => {
+                    // Parse the returned HTML and extract the news section
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const newNewsSection = doc.querySelector('#news-container'); // Adjust selector if necessary
+
+                    // Replace the old news section with the new one
+                    const oldNewsSection = document.querySelector('#news-container');
+                    if (oldNewsSection && newNewsSection) {
+                        oldNewsSection.innerHTML = newNewsSection.innerHTML;
+                        
+                        // Re-attach event listeners for new dynamically added elements
+                        attachNewsEventListeners();  // Ensure you have a function for this
+                    }
+                })
+                .catch(error => {
+                    console.error('Error while refreshing news section:', error);
+                });
+        }
+
+        // Function to re-attach event listeners after the DOM has been updated
+        function attachNewsEventListeners() {
+            // Re-attach event listeners for dynamically added buttons and forms
+            document.querySelectorAll('.submit-news').forEach((button, index) => {
+                button.addEventListener('click', () => {
+                    handleNewsSubmit(index + 1);  // Ensure the right section is being submitted
+                });
+            });
+
+            // Add any other necessary event listeners for the dynamically updated content
+        }
+
+        
+
+    </script>
+
+</body>
+
+</html>
+{% endblock content %}

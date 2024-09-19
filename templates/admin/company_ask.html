@@ -1,0 +1,319 @@
+{% load static %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 20px;
+        }
+        .table-container {
+            margin-top: 50px;
+            margin-left: 140px;
+            font-family: 'Arial MT Rounded';
+            font-size: 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+       
+            padding: 10px;
+            vertical-align: middle;
+            border-bottom: 1px solid black;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        td {
+            word-wrap: break-word;
+            white-space: normal;
+        }
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 0, 0, .05);
+        }
+        .form-control {
+            border: none !important;
+            background-color: transparent !important;
+            text-align: left;
+            box-shadow: none !important;
+        }
+        .form-control:focus {
+            background-color: transparent !important;
+            outline: none;
+            box-shadow: none !important;
+            text-align: left;
+        }
+        .add-row-button, .edit-button, .delete-button {
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+        .breadcrumb{
+            margin-top: 20px;
+            margin-left: 250px;
+            font-size: 14px !important;
+            color:black;
+            font-family: 'Arial MT Rounded';
+        }
+        .bold-text {
+            font-weight: bold;
+        }
+        html, body {
+            overflow: hidden; /* Hides the scrollbars */
+        }
+    </style>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+</head>
+
+<body>
+    {% include './company_profile.html' %}
+    <div class="breadcrumb">
+        <span>My Companies</span> &ndash; <span>{{ company.name }}</span> &ndash; <span class="bold-text">Company Ask</span>
+    </div>
+
+    <div class="container">
+        <div id="tableContainer" class="table-container">
+            <table id="capTable" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Ask</th>
+                        <th>Value</th>
+                        <th>Equity Share</th>
+                        <th>Details</th>
+                        <th class="actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    {% for entry in ask %}
+                    <tr data-entry-id="{{ entry.id }}">
+                        <td>{{ entry.ask }}</td>
+                        <td>{{ entry.valuation }}</td>
+                        <td>{{ entry.equity_share }}</td>
+                        <td>{{ entry.details }}</td>
+                        <td>
+                            <span class="edit-button" onclick="editRow(this)">&#9998;</span>
+                            <span class="delete-button" onclick="deleteentry(this)">&#10060;</span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">No data available</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="text-center mt-3">
+                <span class="add-row-button" onclick="showEntryRow()">+ Add Row</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let rows = [];
+
+function showEntryRow() {
+    const tableBody = document.getElementById('tableBody');
+    const entryRow = document.createElement('tr');
+    entryRow.innerHTML = `
+        <td><input type="number" class="form-control" id="askInput"></td>
+        <td><input type="number" class="form-control" id="valueInput"></td>
+        <td><input type="number" class="form-control" id="equityShareInput"></td>
+        <td><input type="text" class="form-control" id="detailsInput"></td>
+        <td><button class="btn btn-primary btn-sm" onclick="saveRow()">Add</button></td>
+    `;
+    tableBody.appendChild(entryRow);
+}
+
+function saveRow() {
+    const companyId = '{{ company.company_id }}'; // Ensure company ID is correctly set
+
+    const row = {
+        ask: document.getElementById('askInput').value,
+        value: document.getElementById('valueInput').value,
+        equityShare: document.getElementById('equityShareInput').value,
+        details: document.getElementById('detailsInput').value
+    };
+    
+    fetch(`/company_ask/${companyId}/`, { // Use companyId in the URL
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCsrfToken() // Function to get CSRF token
+        },
+        body: JSON.stringify(row)
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Network response was not ok.');
+        }
+    })
+    .then(data => {
+        if (data.success) {
+            rows.push(row); // Add new row to the array
+            renderRows();
+        } else {
+            alert('Error saving data');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function getCsrfToken() {
+    const csrfToken = document.querySelector('[name=csrf-token]').content;
+    return csrfToken;
+}
+
+function renderRows() {
+    const tableBody = document.getElementById('tableBody');
+    tableBody.innerHTML = '';
+    rows.forEach((row, index) => {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>${row.ask}</td>
+            <td>${row.value}</td>
+            <td>${row.equityShare}</td>
+            <td>${row.details}</td>
+            <td>
+                <span class="edit-button" onclick="editRow(${index})">&#9998;</span>
+                <span class="delete-button" onclick="deleteRow(${index})">&#10060;</span>
+            </td>
+        `;
+        tableBody.appendChild(newRow);
+    });
+}
+
+   
+function deleteentry(button) {
+    // Get the entry ID from the row (assumes entry.id is available in the template)
+    const row = button.closest('tr');
+    const entryId = row.dataset.entryId; // Get entry id from the row's data attribute
+    const companyId = '{{ company.company_id }}';
+
+    if (!entryId) {
+        console.error('Entry ID not found.');
+        return;
+    }
+
+    fetch(`/company_ask/delete/${companyId}/${entryId}/`, { // Use company ID and entry ID in the URL
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCsrfToken() // Ensure CSRF token is sent
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            // Remove row from the table
+            row.remove();
+        } else {
+            throw new Error('Failed to delete entry.');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+function editRow(button) {
+    // Find the row to edit
+    const row = button.closest('tr');
+    const entryId = row.dataset.entryId; // Get the entry ID from the row's data attribute
+
+    // Get the current values in the row
+    const ask = row.children[0].innerText;
+    const value = row.children[1].innerText;
+    const equityShare = row.children[2].innerText;
+    const details = row.children[3].innerText;
+
+    // Replace the row's cells with input fields for editing
+    row.innerHTML = `
+        <td><input type="number" class="form-control" value="${ask}" id="askInput"></td>
+        <td><input type="number" class="form-control" value="${value}" id="valueInput"></td>
+        <td><input type="number" class="form-control" value="${equityShare}" id="equityShareInput"></td>
+        <td><input type="text" class="form-control" value="${details}" id="detailsInput"></td>
+        <td>
+            <button class="btn btn-primary btn-sm" onclick="saveEditedRow(${entryId}, this)">Save Changes</button>
+            <button class="btn btn-secondary btn-sm" onclick="cancelEdit(${entryId}, this)">Cancel</button>
+        </td>
+    `;
+}
+
+function saveEditedRow(entryId, button) {
+    const row = button.closest('tr');
+    const companyId = '{{ company.company_id }}'; // Company ID for the request
+
+    // Get the updated values from the input fields
+    const updatedRow = {
+        ask: row.querySelector('#askInput').value,
+        valuation: row.querySelector('#valueInput').value,
+        equityShare: row.querySelector('#equityShareInput').value,
+        details: row.querySelector('#detailsInput').value,
+    };
+
+    // Send the updated data to the server via PUT request
+    fetch(`/company_ask/update/${companyId}/${entryId}/`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCsrfToken(),
+        },
+        body: JSON.stringify(updatedRow),
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Error updating the entry.');
+        }
+    })
+    .then(data => {
+        if (data.success) {
+            // Update the row with the new values and restore the actions buttons
+            row.innerHTML = `
+                <td>${updatedRow.ask}</td>
+                <td>${updatedRow.valuation}</td>
+                <td>${updatedRow.equityShare}</td>
+                <td>${updatedRow.details}</td>
+                <td>
+                    <span class="edit-button" onclick="editRow(this)">&#9998;</span>
+                    <span class="delete-button" onclick="deleteentry(this)">&#10060;</span>
+                </td>
+            `;
+        } else {
+            alert('Failed to update entry.');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function cancelEdit(entryId, button) {
+    const row = button.closest('tr');
+    
+    // Re-fetch the original row data or restore it from a cached version
+    fetch(`/company_ask/get/${entryId}/`)
+    .then(response => response.json())
+    .then(data => {
+        row.innerHTML = `
+            <td>${data.ask}</td>
+            <td>${data.valuation}</td>
+            <td>${data.equityShare}</td>
+            <td>${data.details}</td>
+            <td>
+                <span class="edit-button" onclick="editRow(this)">&#9998;</span>
+                <span class="delete-button" onclick="deleteentry(this)">&#10060;</span>
+            </td>
+        `;
+    });
+}
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+{% endblock content %}

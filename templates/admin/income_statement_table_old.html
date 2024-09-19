@@ -1,0 +1,1287 @@
+{% include 'admin/company_profile.html' %}
+
+{% block styles %}
+<style>
+    :root {
+        --row-height: 20px !important;
+        --font-size: 14px;
+        --first-column-width: 350px;
+        --indentation: 20px;
+        --double-indentation: 40px;
+        --triple-indentation: 60px;
+        --quad-indentation: 80px;
+        --column-width: 60px !important;
+    }
+
+    body {
+        
+        font-size: var(--font-size);
+        color: black;
+        overflow: hidden;
+        
+    }
+
+    .container {
+        margin-left: 250px;
+        max-width: 100%;
+        position: relative;
+        height: calc(100vh - 135px);
+        overflow-y: auto;
+        max-height: 100%;
+        margin-top: 25px !important;
+        font-family: 'Arial MT Rounded';
+    }
+
+    .content {
+        margin: 40px auto;
+        padding-top: 30px;
+        padding-left: 200px;
+    }
+
+    .table-wrapper {
+        position: relative;
+        width: 70%;
+        overflow-x: auto;
+        overflow-y: auto;
+        flex:2;
+        max-width: 70% !important;
+        margin-right: -250px;
+        overflow-y: auto; /* Add vertical scrollbar */
+    scrollbar-width: none;  /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none; 
+    }
+    .table-wrapper::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari, WebKit */
+}
+
+    table {
+        width: 75%;
+        table-layout: fixed;
+        border-collapse: collapse;
+        font-family: 'Arial MT Rounded';
+        font-size: var(--font-size);
+        /* coloumn-width:var(--column-width) !important; */
+        
+    }
+
+    th, td {
+        vertical-align: middle;
+        text-align: right; 
+        padding: 12px;
+        height: var(--row-height);
+        font-size: var(--font-size);
+        line-height: 1.2;
+        overflow: hidden;
+        transition: background-color 0.3s ease;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+       
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        text-align: center !important;
+    }
+
+    td:first-child {
+        position: sticky;
+        left: 0;
+        background-color: white;
+        z-index: 3;
+        width: 350px !important;
+        text-align: left;
+    }
+    .td{
+        text-align: right !important;
+    }
+
+
+    .table tbody tr:hover {
+        background-color: #f0f0f0;
+    }
+
+    .indent-level-1 td:first-child {
+        padding-left: var(--indentation) !important;
+    }
+
+    .indent-level-2 td:first-child {
+        padding-left: var(--double-indentation) !important;
+    }
+
+    .indent-level-3 td:first-child {
+        padding-left: var(--triple-indentation) !important;
+    }
+
+    .indent-level-4 td:first-child {
+        padding-left: var(--quad-indentation) !important;
+    }
+
+    .expandable-icon {
+        cursor: pointer;
+        margin-left: 5px;
+    }
+
+    .expandable-icon::before {
+        content: "\25B6";
+        display: inline-block;
+        transform: rotate(90deg);
+    }
+
+    .collapse.show .expandable-icon::before {
+        content: "\25BC";
+        transform: rotate(0deg);
+    }
+
+    .btn-plus {
+        font-size: 24px;
+        color: #007bff;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding-left: 20px;
+        margin-top: -10px;
+        font-weight: bold; 
+    }
+
+    .btn-plus:hover {
+        color: #0056b3;
+    }
+
+    tr.hidden {
+        display: none;
+    }
+
+    .table-container {
+        max-height: 500px;
+        overflow-y: auto;
+        overflow-x: auto;
+        scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer and Edge */
+}
+
+.table-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, WebKit */
+}
+
+    /* Remove vertical lines inside the table */
+    table, th, td {
+        border-left: none;
+        border-right: none;
+    }
+
+    .editable input {
+        border: none;            /* Remove all borders */
+        border-bottom: 1px solid #000; /* Add only bottom border */
+        text-align: right;        /* Align text to the right */
+        background: transparent;  /* Make background transparent */
+        outline: none;            /* Remove focus outline */
+        padding: 0;
+        width: 100%;              /* Make input fields fill the cell */
+        box-shadow: none !important; /* Remove any default box shadow */
+        -webkit-box-shadow: none !important; /* For WebKit browsers */
+        -moz-box-shadow: none !important; /* For Mozilla-based browsers */
+        border-radius: 0px !important;
+    }
+
+    .editable input:focus {
+        outline: none;            /* Remove focus outline */
+        box-shadow: none !important; /* Remove any box shadow on focus */
+        -webkit-box-shadow: none !important; /* For WebKit browsers */
+        -moz-box-shadow: none !important; /* For Mozilla-based browsers */
+    }
+    .btn btn-primary,btn-success{
+        margin-top: -10px;
+    }
+    .table-card-wrapper{
+        display: flex;
+        justify-content: block;
+
+    }
+    .card{
+        flex:1;
+        /* margin-left: 0px; */
+        max-width: 30%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: none;  /* Hide scrollbar for Firefox */
+        -ms-overflow-style: none; 
+        max-height: 550px;
+        border-left: 1px solid black;
+        border-bottom: 0px;
+        border-right: 0px;
+        border-top: 0px;
+        border-radius: 0px;
+        
+
+    }
+    .card::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari, WebKit */
+}
+    .form-group{
+    padding-left: 0px;
+    margin-left: 0px;
+}
+.form-control{
+    border-bottom: 1px black solid;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    border-radius: 0px;
+}
+.card-title{
+    padding-bottom: 20px;
+    text-align: center;
+}
+.liquidity{
+    text-align: center;
+    color:black;
+}
+.label{
+    font-family: 'Arial MT Rounded';
+    font-size: 12px;
+    color: grey;
+    text-decoration: none;
+    
+}
+.lable-value{
+    font-family: 'Arial MT Rounded';
+    font-size: 16px;
+    text-decoration: bold;
+    margin-top: -8px;
+}
+.btn-group ms-3{
+    margin-left: 100px !important;
+}
+</style>
+{% endblock styles %}
+
+{% block content %}
+<div class="container mt-5">
+    {% for msg in messages %}
+    <p class="text-danger text-center mt-2 fw-bold" style="font-size: 1rem;">{{ msg }}</p>
+    {% endfor %}
+    <div class="row" style="align-items: center;">
+        <div class="col-md-6 d-flex align-items-center">
+            <h6 class="mb-6" style="color: black;" style="font-size: 16px;">
+                Corporate Finance -Planning & Budgeting
+                
+                - <b>Income Statement</b>
+            </h6>
+            <div class="btn-group ms-3" >
+                <button class="btn btn-primary">Monthly</button>
+                <button class="btn btn-primary">Quarterly</button>
+                <button class="btn btn-primary">Annually</button>
+            </div>
+        </div>
+
+       
+        <div class="col-md-4 text-end d-flex justify-content-end align-items-center">
+            
+            <a href="#" class="btn-plus" data-bs-toggle="modal" data-bs-target="#balance_sheet">+</a>
+            <button id="editButton" class="btn btn-primary">Edit</button>
+            <button id="saveButton" class="btn btn-success  d-none">Save Changes</button>
+            <!-- The Modal -->
+            <div class="modal" id="balance_sheet">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title"></h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <!-- Modal body -->
+                        <div class="modal-body text-center">
+                            <form method="POST" action="#" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="inline">
+                                    <div style="margin-right:15px;">
+                                        <input type="radio" class="form-check-input" id="monthly"
+                                            name="select_type_of_data" value="monthly">
+                                        <label class="form-check-label" for="monthly">Monthly</label>
+                                    </div>
+                                    <div style="margin-right:15px;">
+                                        <input type="radio" class="form-check-input" id="quarterly"
+                                            name="select_type_of_data" value="quarterly">
+                                        <label class="form-check-label" for="quarterly">Quarterly</label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" class="form-check-input" id="yearly"
+                                            name="select_type_of_data" value="yearly">
+                                        <label class="form-check-label" for="yearly">Yearly</label>
+                                    </div>
+                                </div>
+                                <div id="dropdown-container" class="mt-3"></div>
+                                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                            </form>
+                        </div>
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-container mt-1">
+        <div class="table-card-wrapper">
+        <div class="table-wrapper">
+            <table class="cell">
+                <thead>
+                    <tr>
+                        <th class="rowview">Breakdown</th>
+                        {% for income_statement in income_statements %}
+                        <th class="rowview1">{{income_statement.end_date|date:'d-m-Y'}}
+                            <span class="period-type" style="display: none;">{{ income_statement.monthly_or_quarterly_or_yearly }}</span>
+                           </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Total Assets Section -->
+                    <tr>
+                        <td>Total Revenue <span class="expandable-icon" onclick="toggle(this, '#MS01a');"></span></td>
+                        {% for income_statement in income_statements %}
+                        <td id="total_assets-{{ forloop.counter }}">{{income_statement.total_revenue}}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr id="MS01a" class="hidden indent-level-1">
+                        <td>Operating Revenue <span class="expandable-icon" onclick="toggle(this, '#MS01b');"></span></td>
+                        {% for income_statement in income_statements %}
+                        <td class="current-assets-column" id="current-assets-{{ forloop.counter }}">{{ income_statement.operating_revenue }}</td>
+                        {% endfor %}
+                    </tr>
+                        <tr>
+                        <td>Cost of Revenue <span></span></td>
+                        {% for income_statement in income_statements %}
+                        <td id="total_assets-{{ forloop.counter }}">{{income_statement.cost_of_revenue}}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                    <td>Gross Profit <span></span></td>
+                    {% for income_statement in income_statements %}
+                    <td id="total_assets-{{ forloop.counter }}">{{income_statement.gross_profit}}</td>
+                    {% endfor %}
+                </tr>
+
+                        <tr>
+                        <td>Operating Expense <span class="expandable-icon" onclick="toggle(this, '#LI01');"></span></td>
+                        {% for income_statement in income_statements %}
+                        <td class=" total_non_current_assets_column" id="total_non_current_assets-{{ forloop.counter }}" oninput="calculatetotal()">{{ income_statement.operating_expense }}</td>
+                        {% endfor %}
+                    </tr>
+
+                    <tr id="LI01" class="hidden indent-level-1">
+                        <td>Selling, General and Administrative Expense <span class="expandable-icon" onclick="toggle(this, '#LI011a');"></span></td>
+                        {% for income_statement in income_statements %}
+                        <td class=" net_ppe_column" id="net_ppe-{{ forloop.counter }}" oninput="calculatetotal()">{{ income_statement.selling_general_and_administrative_expense }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr id="LI011a" class="hidden indent-level-2">
+                        <td>General & Administrative Expenses <span></span></td>
+                        {% for income_statement in income_statements %}
+                        <td class="gross_ppe-column" id="gross_ppe-{{ forloop.counter }}">{{ income_statement.general_and_administrative_expenses }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr id="LI011a" class="hidden indent-level-2">
+                        <td>Selling and Marketing Expense <span span></td>
+                        {% for income_statement in income_statements %}
+                        <td class="gross_ppe-column" id="gross_ppe-{{ forloop.counter }}">{{ income_statements.selling_and_marketing_expense }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr id="LI01" class="hidden indent-level-1">
+                        <td>Research & Development <span></span></td>
+                        {% for income_statement in income_statements %}
+                        <td class=" net_ppe_column" id="net_ppe-{{ forloop.counter }}" oninput="calculatetotal()">{{ income_statement.research_and_development_expense }}</td>
+                        {% endfor %}
+                    </tr>
+                   
+
+                    <!-- Total Liabilities Net Minority Interest -->
+                    <tr>
+                        <td>Operating Income <span class="expandable-icon" onclick="toggle(this, '#LI01a');"></span></td>
+                        {% for income_statement in income_statements %}
+                        <td class=" total-liabilities-column" id="total-liabilities-net-minority-interest-{{ forloop.counter }}" oninput="calculatetotal()">{{ income_statement.operating_income }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr id="LI01a" class="hidden indent-level-1">
+                        <td>Net Non Operating Interest Income/ (Expense) <span class="expandable-icon" onclick="toggle(this, '#LI01b');"></span></td>
+                        {% for income_statement in income_statements %}
+                        <td class=" current-liabilities-column" id="current-liabilities-{{ forloop.counter }}" oninput="calculatetotal()">{{ income_statement.current_liabilities }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr id="LI01b" class="hidden indent-level-2">
+                        <td>Interest Income Non Operating <span></span></td>
+                        {% for income_statement in income_statements %}
+                        <td class=" payables-accrued-column" id="payables-and-accrued-expenses-{{ forloop.counter }}" oninput="calculatetotal()">{{ income_statement.payables_and_accrued_expenses }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr id="LI01b" class="hidden indent-level-2">
+                        <td>Interest Expense Non Operating</td>
+                        {% for income_statement in income_statements %}
+                        <td class="editable accounts-payable-column" id="accounts-payable-{{ forloop.counter }}" oninput="calculatetotal()">{{ income_statement.accounts_payable }}</td>
+                        {% endfor %}
+                    </tr>
+
+                    <!-- Total Non-Current Liabilities Net Minority Interest -->
+                    <tr id="LI01a" class="hidden indent-level-1">
+                        <td>Other Income/(Expense) <span class="expandable-icon" onclick="toggle(this, '#LI02a');"></span></td>
+                        {% for income_statement in income_statements %}
+                        <td class="total-non-current-liabilities-column" id="total-non-current-liabilities-net-minority-interest-{{ forloop.counter }}" oninput="calculatetotal()">{{ income_statement.other_income_or_expense }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr id="LI02a" class="hidden indent-level-2">
+                        <td>Gain/(Loss) on Sale of Security <span></span></td>
+                        {% for income_statement in income_statements %}
+                        <td class=" long-term-debt-and-capital-lease-obligation" id="long-term-debt-and-capital-lease-obligation-{{ forloop.counter }}" oninput="calculatetotal()">{{ income_statement.gain_or_loss_on_sale_of_security }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr id="LI02b" class="hidden indent-level-3">
+                        <td>Special Income/(Charges)</td>
+                        {% for income_statement in income_statements %}
+                        <td class="editable long-term-debt-column" id="long-term-debt-{{ forloop.counter }}" oninput="calculatetotal()">{{ income_statement.special_income_or_charges }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr id="LI02b" class="hidden indent-level-3">
+                        <td>Write Off</td>
+                        {% for income_statement in income_statements %}
+                        <td class="editable long-term-capital-lease-column" id="long-term-capital-lease-obligation-{{ forloop.counter }}" oninput="calculatetotal()">{{ income_statement.write_off }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr id="LI02b" class="hidden indent-level-3">
+                        <td>Other Non Operating Income/ (Expenses)</td>
+                        {% for income_statement in income_statements %}
+                        <td class="editable long-term-capital-lease-column" id="long-term-capital-lease-obligation-{{ forloop.counter }}" oninput="calculatetotal()">{{ income_statement.other_non_operating_income_or_expenses }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Pretax Income</td>
+                        {% for income_statement in income_statements %}
+                            <td>{{income_statement.pretax_income}}</td>
+                            {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Tax Provision</td>
+                        {% for income_statement in income_statements %}
+                            <td>{{income_statement.tax_provision}}</td>
+                            {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Net Income</td>
+                        {% for income_statement in income_statements %}
+                            <td>{{income_statement.net_income}}</td>
+                            {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Preference Share Dividends</td>
+                        {% for income_statement in income_statements %}
+                            <td>{{income_statement.preference_share_dividends}}</td>
+                            {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Net Income to CSH...</td>
+                        {% for income_statement in income_statements %}
+                            <td>{{income_statement.net_income_to_common_stockholders}}</td>
+                            {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Equity Share Dividends</td>
+                        {% for income_statement in income_statements %}
+                            <td>{{income_statement.equity_share_dividends}}</td>
+                            {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Retained Earnings</td>
+                        {% for income_statement in income_statements %}
+                            <td>{{income_statement.retained_earnings}}</td>
+                            {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Basic EPS</td>
+                        {% for income_statement in income_statements %}
+                            <td>{{income_statement.basic_eps}}</td>
+                            {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Diluted EPS</td>
+                        {% for income_statement in income_statements %}
+                            <td>{{income_statement.diluted_eps}}</td>
+                            {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Depreciation and Amortization</td>
+                        {% for income_statement in income_statements %}
+                            <td>{{income_statement.depreciation_and_amortization}}</td>
+                            {% endfor %}
+                    </tr>
+                    <td>No Of Equity Shares</td>
+                        {% for income_statement in income_statements %}
+                            <td>{{income_statement.no_of_equity_shares}}</td>
+                            {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>EBITDA</td>
+                        {% for income_statement in income_statements %}
+                            <td>{{income_statement.ebitda}}</td>
+                            {% endfor %}
+                    </tr>
+                    
+
+                   
+                </tbody>
+            </table>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Ratios</h5>
+                <div class="form-group" style="position: relative; margin-bottom: 20px;">
+                    <label for="period" style="position: absolute; top: -20px; left: 0;">Select Period</label>
+                    <select id="period" class="form-control">
+                        <option value="" disabled selected>Choose Period</option>
+                        {% for income_statement in income_statements %}
+                            <option value="{{ income_statement.id }}">{{ income_statement.end_date|date:'d-m-Y' }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+        
+                <h6 class="liquidity">Liquidity Ratios</h6>
+                <div class="info-block">
+                    <label for="gross_profit_ratio" class="label"> Gross profit ratio</label>
+                    <p id="gross_profit_ratio" class="lable-value"></p>
+                </div>
+                <div class="info-block">
+                    <label for="operating_profit_ratio" class="label">Operating profit ratio </label>
+                    <p id="operating_profit_ratio" class="lable-value"></p>
+                </div>
+                <div class="info-block">
+                    <label for="ebitda_margin" class="label">EBITDA Margin</label>
+                    <p id="ebitda_margin" class="lable-value"></p>
+                </div>
+                <div class="info-block">
+                    <label for="net_profit_margin" class="label">Net profit margin</label>
+                    <p id="net_profit_margin" class="lable-value"></p>
+                </div>
+                <div class="info-block">
+                    <label for="earning_per_share" class="label">Earnings per share</label>
+                    <p id="earnings_per_share" class="lable-value"></p> 
+                </div>
+                <div class="info-block">
+                    <label for="interest_ratio" class="label">Interest Service Coverage Ratio </label>
+                    <p id="interest_ratio" class="lable-value"></p>
+                </div>
+        
+        
+                <h6 class="liquidity">Activity Ratios</h6>
+                <div class="info-block">
+                    <label for="operating_cash_flow_ratio" class="label">Operating Cash Flow Ratio</label>
+                    <p id="operating_cash_flow_ratio" class="lable-value"></p>
+                </div>
+                <div class="info-block">
+                    <label for="debt_service_coverage_ratio" class="label">Debt Service Coverage Ratio</label>
+                    <p id="debt_service_coverage_ratio" class="lable-value"></p>
+
+                </div>
+            </div>
+        </div>
+        
+</div>
+</div>
+
+<script>
+    function toggle(button, targetId) {
+        var targetRows = document.querySelectorAll(targetId);
+        var isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+        button.setAttribute('aria-expanded', !isExpanded);
+        targetRows.forEach(row => {
+            if (isExpanded) {
+                row.classList.add('hidden');
+            } else {
+                row.classList.remove('hidden');
+            }
+        });
+    }
+
+    // Collapse all by default when the page is loaded
+    window.onload = function() {
+        document.querySelectorAll('.expandable-icon').forEach(icon => {
+            icon.setAttribute('aria-expanded', 'false');
+            var targetId = icon.getAttribute('onclick').split("'")[1];
+            document.querySelectorAll(targetId).forEach(row => row.classList.add('hidden'));
+        });
+    }
+     // Embed the Python-generated JSON data into JavaScript variables
+     const months = JSON.parse('{{ months_json|escapejs }}');
+    const quarters = JSON.parse('{{ quarters_json|escapejs }}');
+    const years = JSON.parse('{{ years_json|escapejs }}');
+
+    // JavaScript to handle dropdown options based on selected radio button
+    const radioButtons = document.querySelectorAll('input[name="select_type_of_data"]');
+    const dropdownContainer = document.getElementById('dropdown-container');
+
+    radioButtons.forEach(radio => {
+        radio.addEventListener('change', function () {
+            dropdownContainer.innerHTML = ''; // Clear the container
+
+            if (this.value === 'yearly') {
+                // Create Year Dropdown
+                const yearWrapper = document.createElement('div');
+                yearWrapper.classList.add('inline-container');
+
+                const yearLabel = document.createElement('label');
+                yearLabel.setAttribute('for', 'year-select');
+                yearLabel.textContent = 'Select Year:';
+
+                const yearSelect = document.createElement('select');
+                yearSelect.name = 'year';
+                yearSelect.id = 'year-select';
+                yearSelect.classList.add('form-select');
+                createOptions(years, yearSelect);
+
+                yearWrapper.appendChild(yearLabel); // Add the year label to the wrapper
+                yearWrapper.appendChild(yearSelect); // Add the year dropdown to the wrapper
+                dropdownContainer.appendChild(yearWrapper); // Add the year wrapper to the container
+
+            } else {
+                // Create Year Dropdown
+                const yearWrapper = document.createElement('div');
+                yearWrapper.classList.add('inline-container');
+
+                const yearLabel = document.createElement('label');
+                yearLabel.setAttribute('for', 'year-select');
+                yearLabel.textContent = 'Select Year:';
+
+                const yearSelect = document.createElement('select');
+                yearSelect.name = 'year';
+                yearSelect.id = 'year-select';
+                yearSelect.classList.add('form-select');
+                createOptions(years, yearSelect);
+
+                yearWrapper.appendChild(yearLabel); // Add the year label to the wrapper
+                yearWrapper.appendChild(yearSelect); // Add the year dropdown to the wrapper
+                dropdownContainer.appendChild(yearWrapper); // Add the year wrapper to the container
+
+                // Create Month/Quarter Dropdown
+                const mainWrapper = document.createElement('div');
+                mainWrapper.classList.add('inline-container');
+
+                const mainLabel = document.createElement('label');
+                mainLabel.setAttribute('for', 'main-select');
+
+                const mainSelect = document.createElement('select');
+
+                mainSelect.id = 'main-select';
+                mainSelect.classList.add('form-select');
+
+                if (this.value === 'monthly') {
+                    mainLabel.textContent = 'Select Month:';
+                    mainSelect.name = 'month';
+                    createOptions(months, mainSelect);
+                } else if (this.value === 'quarterly') {
+                    // Convert quarters object to an array of strings in the format "Q1 Jan,Feb,Mar"
+                    const quartersArray = Object.entries(quarters).map(([key, value]) => `${key} ${value}`);
+                    mainLabel.textContent = 'Select Quarter:';
+                    mainSelect.name = 'quarter';
+
+                    createOptions(quartersArray, mainSelect);
+                }
+
+                mainWrapper.appendChild(mainLabel); // Add the main label to the wrapper
+                mainWrapper.appendChild(mainSelect); // Add the main dropdown to the wrapper
+                dropdownContainer.appendChild(mainWrapper); // Add the main wrapper to the container
+            }
+        });
+    });
+
+    function createOptions(options, selectElement) {
+        options.forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option;
+            opt.textContent = option;
+            selectElement.appendChild(opt);
+        });
+    }
+
+    document.getElementById('editButton').addEventListener('click', function () {
+    // Show the Save button and hide the Edit button
+    document.getElementById('editButton').classList.add('d-none');
+    document.getElementById('saveButton').classList.remove('d-none');
+
+    // Enable editing for all editable fields
+    document.querySelectorAll('.editable').forEach((cell) => {
+        const currentValue = cell.innerText.trim();
+        cell.innerHTML = `<input type="text" class="form-control" value="${currentValue}" />`;
+    });
+});
+
+document.getElementById('saveButton').addEventListener('click', function () {
+    // Collect updated data from input fields
+    const editedData = [];
+    document.querySelectorAll('.editable').forEach((cell) => {
+        const input = cell.querySelector('input');
+        if (input) {
+            cell.innerText = input.value.trim();  // Save the input value back to the cell's text
+            editedData.push({id: cell.id, value: input.value.trim()});  // Collect data for sending to server
+        }
+    });
+
+    // Hide the Save button and show the Edit button
+    document.getElementById('saveButton').classList.add('d-none');
+    document.getElementById('editButton').classList.remove('d-none');
+
+    // Convert the edited data to JSON
+    const jsonData = JSON.stringify(editedData);
+    ('Data to send:', jsonData);
+
+    // Example POST request to send the data to the server
+    fetch('/save-edited-data', {  // Adjust the URL to your actual data handling endpoint
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'  // Ensure your CSRF token is correctly included for Django
+        },
+        body: jsonData
+    })
+    .then(response => response.json())
+    .then(data => {
+        ('Success:', data);
+        alert('Data saved successfully!');
+    })
+    .catch((error) => {
+       ('Error:', error);
+        alert('Failed to save data.');
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const periodSelect = document.getElementById('period');
+
+    periodSelect.addEventListener('change', function() {
+        const selectedPeriodId = this.value;
+        console.log(selectedPeriodId);
+
+        // Assuming balancesheetratios_json is correctly passed and formatted
+        const balancesheetRatios = JSON.parse('{{ balancesheetratios_json|escapejs }}');
+
+        const selectedRatios = balancesheetRatios.find(ratio => ratio.incomesheet_id === parseInt(selectedPeriodId));
+        console.log(selectedRatios)
+        if (selectedRatios) {
+            document.getElementById('gross_profit_ratio').textContent = selectedRatios.gross_profit_ratio || 'N/A';
+            document.getElementById('operating_profit_ratio').textContent = selectedRatios.operating_profit_ratio || 'N/A';
+            document.getElementById('ebitda_margin').textContent = selectedRatios.ebitda_margin || 'N/A';
+            document.getElementById('net_profit_margin').textContent = selectedRatios.net_profit_margin || 'N/A';
+            document.getElementById('earnings_per_share').textContent = selectedRatios.earnings_per_share || 'N/A';
+            document.getElementById('interest_ratio').textContent = selectedRatios.interest_service || 'N/A';
+            document.getElementById('operating_cash_flow_ratio').textContent = selectedRatios.operating_cash_flow_ratio || 'N/A';
+            document.getElementById('debt_service_coverage_ratio').textContent = selectedRatios.debt_service_coverage_ratio || 'N/A';
+        } else {
+            const ratioIds = ['gross_profit_ratio', 'operating_profit_ratio', 'ebitda_margin', 'net_profit_margin', 'earnings_per_share', 'interest_ratio', 'operating_cash_flow_ratio', 'debt_service_coverage_ratio'];
+            ratioIds.forEach(id => document.getElementById(id).textContent = 'N/A');
+        }
+    });
+});
+
+
+
+
+//     function calculatetotal() {
+//     // Calculate Cash + Cash Equivalents + Short Term Investments
+//     const cashColumns = document.querySelectorAll('.cash-column');
+//     const cashEquivalentsColumns = document.querySelectorAll('.cash-equivalents-column');
+//     const shortTermInvestmentsColumns = document.querySelectorAll('.short-term-investments-column');
+
+//     cashColumns.forEach((cashCell, index) => {
+//         const cash = parseFloat(cashCell.querySelector('input')?.value || cashCell.innerText.trim()) || 0;
+//         const cashEquivalents = parseFloat(cashEquivalentsColumns[index].querySelector('input')?.value || cashEquivalentsColumns[index].innerText.trim()) || 0;
+//         const shortTermInvestments = parseFloat(shortTermInvestmentsColumns[index].querySelector('input')?.value || shortTermInvestmentsColumns[index].innerText.trim()) || 0;
+
+//         const cashTotal = cash + cashEquivalents;
+//         const cashAndShortTermTotal = cashTotal + shortTermInvestments;
+
+//         // Update totals in the corresponding fields
+//         document.getElementById(`cash-and-cash-equivalents-${index + 1}`).innerText = cashTotal;
+//         document.getElementById(`cash-cash-equivalents-and-short-term-${index + 1}`).innerText = cashAndShortTermTotal;
+//     });
+
+// const accountsReceivableColumns = document.querySelectorAll('.accounts-receivable-column');
+// const otherReceivablesColumns = document.querySelectorAll('.other-receivables-column');
+
+// accountsReceivableColumns.forEach((accountsReceivableCell, index) => {
+//     const accountsReceivable = parseFloat(accountsReceivableCell.querySelector('input')?.value.trim() || accountsReceivableCell.innerText.trim()) || 0;
+//     const otherReceivables = parseFloat(otherReceivablesColumns[index].querySelector('input')?.value.trim() || otherReceivablesColumns[index].innerText.trim()) || 0;
+
+//     const totalReceivables = accountsReceivable + otherReceivables;
+
+//     // Update totals in the corresponding fields
+//     document.getElementById(`receivables-${index + 1}`).innerText = totalReceivables.toFixed(2); // Using toFixed(2) to format the number to 2 decimal places
+// });
+
+// const grossAccountsReceivableColumns = document.querySelectorAll('.gross-accounts-receivable-column');
+// const allowanceDoubtfulColumns = document.querySelectorAll('.allowance-doubtful-column');
+
+// grossAccountsReceivableColumns.forEach((grossAccountsReceivableCell, index) => {
+//     const grossAccountsReceivable = parseFloat(grossAccountsReceivableCell.querySelector('input')?.value.trim() || grossAccountsReceivableCell.innerText.trim()) || 0;
+//     const allowanceDoubtful = parseFloat(allowanceDoubtfulColumns[index].querySelector('input')?.value.trim() || allowanceDoubtfulColumns[index].innerText.trim()) || 0;
+
+//     const totalAccountsReceivable = grossAccountsReceivable - allowanceDoubtful;
+
+//     // Update totals in the corresponding fields
+//     document.getElementById(`accounts-receivable-${index + 1}`).innerText = totalAccountsReceivable.toFixed(2); // Using toFixed(2) to format the number to 2 decimal places
+// });
+
+
+
+    
+//     const rawMaterialsColumns = document.querySelectorAll('.raw-materials-column');
+//     const workProcessColumns = document.querySelectorAll('.work-process-column');
+//     const finishedGoodsColumns = document.querySelectorAll('.finished-goods-column');
+
+//     rawMaterialsColumns.forEach((rawMaterialsCell, index) => {
+//         // Retrieve values for Raw Materials, Work in Process, and Finished Goods
+//         const rawMaterialsValue = parseFloat(rawMaterialsCell.querySelector('input')?.value || rawMaterialsCell.innerText.trim()) || 0;
+//         const workProcessValue = parseFloat(workProcessColumns[index].querySelector('input')?.value || workProcessColumns[index].innerText.trim()) || 0;
+//         const finishedGoodsValue = parseFloat(finishedGoodsColumns[index].querySelector('input')?.value || finishedGoodsColumns[index].innerText.trim()) || 0;
+
+//         // Calculate Inventory
+//         const inventoryTotal = rawMaterialsValue + workProcessValue + finishedGoodsValue;
+
+//         // Update Inventory field
+//         const inventoryElement = document.getElementById(`inventory-${index + 1}`);
+//         if (inventoryElement) {
+//             inventoryElement.innerText = inventoryTotal;
+//         }
+//     });
+
+//     const cashShortTermColumns = document.querySelectorAll('.cash-cash-equivalents-and-short-term-column'); // Auto-calculated
+// const receivablesColumns = document.querySelectorAll('.receivables-column'); // Auto-calculated
+// const inventoryColumns = document.querySelectorAll('.inventory-column'); // Auto-calculated
+// const hedgingAssetsColumns = document.querySelectorAll('.hedging-assets-column'); // Input field
+// const otherCurrentAssetsColumns = document.querySelectorAll('.other-current-assets-column'); // Input field
+
+// cashShortTermColumns.forEach((cashShortTermCell, index) => {
+//     const cashShortTerm = parseFloat(cashShortTermCell.innerText.trim()) || 0;
+//     const receivables = parseFloat(receivablesColumns[index]?.innerText.trim()) || 0;
+//     const inventory = parseFloat(inventoryColumns[index]?.innerText.trim()) || 0;
+//     const hedgingAssets = parseFloat(hedgingAssetsColumns[index].querySelector('input')?.value || hedgingAssetsColumns[index]?.innerText.trim()) || 0;
+//     const otherCurrentAssets = parseFloat(otherCurrentAssetsColumns[index].querySelector('input')?.value || otherCurrentAssetsColumns[index]?.innerText.trim()) || 0;
+
+//     const currentAssetsTotal = cashShortTerm + receivables + inventory + hedgingAssets + otherCurrentAssets;
+
+//     // Update totals in the corresponding fields
+//     document.getElementById(`current-assets-${index + 1}`).innerText = currentAssetsTotal; // Using toFixed(2) to format the number to 2 decimal places
+// });
+
+
+// const landImprovementsColumns = document.querySelectorAll('.land_and_improvements-column');
+// const buildingsColumns = document.querySelectorAll('.buildings_and_improvements-column');
+// const machineryColumns = document.querySelectorAll('.machinery_furniture_equipment-column');
+// const otherPropertiesColumns = document.querySelectorAll('.other_properties-column');
+// const leasesColumns = document.querySelectorAll('.leases-column');
+
+// landImprovementsColumns.forEach((landCell, index) => {
+//     const land = parseFloat(landCell.querySelector('input')?.value || landCell.innerText.trim()) || 0;
+//     const buildings = parseFloat(buildingsColumns[index].querySelector('input')?.value || buildingsColumns[index].innerText.trim()) || 0;
+//     const machinery = parseFloat(machineryColumns[index].querySelector('input')?.value || machineryColumns[index].innerText.trim()) || 0;
+//     const otherProperties = parseFloat(otherPropertiesColumns[index].querySelector('input')?.value || otherPropertiesColumns[index].innerText.trim()) || 0;
+//     const leases = parseFloat(leasesColumns[index].querySelector('input')?.value || leasesColumns[index].innerText.trim()) || 0;
+//     console.log(land, buildings, machinery, otherProperties, leases)
+//     const grossPPE = land + buildings + machinery + otherProperties + leases;
+
+//     // Update the Gross PPE total in the corresponding field
+//     document.getElementById(`gross_ppe-${index + 1}`).innerText = grossPPE; // Using toFixed(2) to format the number to 2 decimal places
+// });
+
+// const grossPPEColumns = document.querySelectorAll('.gross_ppe-column');
+// const accumulatedDepreciationColumns = document.querySelectorAll('.accumulated_depreciation-column');
+
+// grossPPEColumns.forEach((grossPPECell, index) => {
+//     const grossPPE = parseFloat(grossPPECell.querySelector('input')?.value || grossPPECell.innerText.trim()) || 0;
+//     const accumulatedDepreciation = parseFloat(accumulatedDepreciationColumns[index].querySelector('input')?.value || accumulatedDepreciationColumns[index].innerText.trim()) || 0;
+
+//     const netPPE = grossPPE - accumulatedDepreciation;
+
+//     // Update the Net PPE in the corresponding field
+//     document.getElementById(`net_ppe-${index + 1}`).innerText = netPPE; // Using toFixed(2) to format the number to 2 decimal places
+// });
+
+// const goodwillColumns = document.querySelectorAll('.goodwill-column');
+// const otherIntangibleAssetsColumns = document.querySelectorAll('.other-intangible-assets-column');
+
+// goodwillColumns.forEach((goodwillCell, index) => {
+//     const goodwill = parseFloat(goodwillCell.querySelector('input')?.value || goodwillCell.innerText.trim()) || 0;
+//     const otherIntangibleAssets = parseFloat(otherIntangibleAssetsColumns[index].querySelector('input')?.value || otherIntangibleAssetsColumns[index].innerText.trim()) || 0;
+
+//     const totalIntangibleAssets = goodwill + otherIntangibleAssets;
+
+//     // Update the Goodwill and Other Intangible Assets total in the corresponding field
+//     document.getElementById(`goodwill_and_other_intangible_assets-${index + 1}`).innerText = totalIntangibleAssets; // Using toFixed(2) to format the number to 2 decimal places
+// });
+
+// const investmentsColumns = document.querySelectorAll('.long-term-equity-investment-column');
+
+// investmentsColumns.forEach((investmentCell, index) => {
+//     const longTermEquityInvestment = parseFloat(investmentCell.querySelector('input')?.value || investmentCell.innerText.trim()) || 0;
+
+//     // Update the Investments and Advances total in the corresponding field
+//     document.getElementById(`investments_and_advances-${index + 1}`).innerText = longTermEquityInvestment // Using toFixed(2) to format the number to 2 decimal places
+// });
+
+
+// const currentAssetsColumns = document.querySelectorAll('.current-assets-column'); // Auto-calculated
+// const totalNonCurrentAssetsColumns = document.querySelectorAll('.total_non_current_assets_column'); // Auto-calculated
+
+// currentAssetsColumns.forEach((currentAssetsCell, index) => {
+//     const currentAssets = parseFloat(currentAssetsCell.innerText.trim()) || 0;
+//     const totalNonCurrentAssets = parseFloat(totalNonCurrentAssetsColumns[index].innerText.trim()) || 0;
+
+//     const totalAssets = currentAssets + totalNonCurrentAssets;
+
+//     // Update totals in the corresponding fields
+//     document.getElementById(`total_assets-${index + 1}`).innerText = totalAssets.toFixed(2); // Using toFixed(2) to format the number to 2 decimal places
+// });
+
+
+// const netPPEColumns = document.querySelectorAll('.net_ppe_column');
+// const goodwillIntangibleColumns = document.querySelectorAll('.goodwill_and_other_intangible_assets_column');
+// const investmentsAdvancesColumns = document.querySelectorAll('.investments_and_advances_column');
+// const otherNonCurrentAssetsColumns = document.querySelectorAll('.other_non_current_assets_column');
+
+// netPPEColumns.forEach((netPPECell, index) => {
+//     const netPPE = parseFloat(netPPECell.innerText.trim()) || 0;
+//     const goodwillIntangible = parseFloat(goodwillIntangibleColumns[index].innerText.trim()) || 0;
+//     const investmentsAdvances = parseFloat(investmentsAdvancesColumns[index].innerText.trim()) || 0;
+//     const otherNonCurrentAssets = parseFloat(otherNonCurrentAssetsColumns[index].querySelector('input')?.value || otherNonCurrentAssetsColumns[index].innerText.trim()) || 0;
+
+//     const totalNonCurrentAssets = netPPE + goodwillIntangible + investmentsAdvances + otherNonCurrentAssets;
+
+//     // Update totals in the corresponding fields
+//     document.getElementById(`total_non_current_assets-${index + 1}`).innerText = totalNonCurrentAssets; // Using toFixed(2) to format the number to 2 decimal places
+// });
+
+// // const currentAssetsColumns = document.querySelectorAll('.current-assets-column');
+// // const totalNonCurrentAssetsColumns = document.querySelectorAll('.total_non_current_assets_column');
+
+// // currentAssetsColumns.forEach((currentAssetsCell, index) => {
+// //     const currentAssets = parseFloat(currentAssetsCell.querySelector('input')?.value.trim() || currentAssetsCell.innerText.trim()) || 0;
+// //     const totalNonCurrentAssets = parseFloat(totalNonCurrentAssetsColumns[index].querySelector('input')?.value.trim() || totalNonCurrentAssetsColumns[index].innerText.trim()) || 0;
+
+// //     const totalAssets = currentAssets + totalNonCurrentAssets;
+
+// //     // Update totals in the corresponding fields
+// //     document.getElementById(`total_assets-${index + 1}`).innerText = totalAssets.toFixed(2); // Using toFixed(2) to format the number to 2 decimal places
+// // });
+
+
+
+
+//     const currentDebtCells = document.querySelectorAll('.current-debt-column');
+//     const capitalLeaseCells = document.querySelectorAll('.capital-lease-column');
+
+//     currentDebtCells.forEach((debtCell, index) => {
+//         // Retrieve values from inputs or text content.
+//         const currentDebtInput = debtCell.querySelector('input');
+//         const currentDebt = parseFloat(currentDebtInput ? currentDebtInput.value : debtCell.innerText.trim()) || 0;
+
+//         const capitalLeaseInput = capitalLeaseCells[index].querySelector('input');
+//         const capitalLease = parseFloat(capitalLeaseInput ? capitalLeaseInput.value : capitalLeaseCells[index].innerText.trim()) || 0;
+
+//         // Compute the total for Current Debt and Capital Lease Obligation
+//         const totalDebtAndLease = currentDebt + capitalLease;
+//         const totalElementId = `current-debt-and-capital-lease-obligation-${index + 1}`;
+//         const totalElement = document.getElementById(totalElementId);
+
+//         if (totalElement) {
+//             totalElement.innerText = totalDebtAndLease;
+//             (`Updated Current Debt and Capital Lease Obligation for row ${index + 1} to ${totalDebtAndLease}`);
+//         } else {
+//            (`Current Debt and Capital Lease Obligation element for row ${index + 1} not found with ID ${totalElementId}.`);
+//         }
+//     });
+//     const deferredRevenueCells = document.querySelectorAll('.deferred-revenue-column');
+
+// deferredRevenueCells.forEach((revenueCell, index) => {
+//     // Retrieve the value from an input field or text content within the cell.
+//     const revenueInput = revenueCell.querySelector('input');
+//     const deferredRevenue = parseFloat(revenueInput ? revenueInput.value : revenueCell.innerText.trim()) || 0;
+
+//     // Find the element that should display the total Current Deferred Liabilities
+//     const totalElementId = `current-deferred-liabilities-${index + 1}`;
+//     const totalElement = document.getElementById(totalElementId);
+
+//     if (totalElement) {
+//         totalElement.innerText = deferredRevenue;
+//         (`Updated Current Deferred Liabilities for row ${index + 1} to ${deferredRevenue}`);
+//     } else {
+//        (`Current Deferred Liabilities element for row ${index + 1} not found with ID ${totalElementId}.`);
+//     }
+
+// });
+
+// const accountsPayableColumns = document.querySelectorAll('.accounts-payable-column');
+//     const incomeTaxPayableColumns = document.querySelectorAll('.income-tax-payable-column');
+
+//     accountsPayableColumns.forEach((accountsPayableCell, index) => {
+//         // Ensure that there is a corresponding entry in the income tax payable columns
+//         if (index >= incomeTaxPayableColumns.length) {
+         
+//             return;
+//         }
+
+//         const incomeTaxPayableCell = incomeTaxPayableColumns[index];
+
+//         // Extract values, assuming they could be in inputs or just text
+//         const accountsPayableValue = parseFloat(accountsPayableCell.querySelector('input')?.value || accountsPayableCell.innerText.trim()) || 0;
+//         const incomeTaxPayableValue = parseFloat(incomeTaxPayableCell.querySelector('input')?.value || incomeTaxPayableCell.innerText.trim()) || 0;
+
+//         // Calculate the total for Payables and Accrued Expenses
+//         const totalPayablesAndAccruedExpenses = accountsPayableValue + incomeTaxPayableValue;
+
+//         // Find the element to update the total (make sure the HTML has this ID structure)
+//         const payablesAccruedExpensesElement = document.getElementById(`payables-and-accrued-expenses-${index + 1}`);
+//         if (payablesAccruedExpensesElement) {
+//             payablesAccruedExpensesElement.innerText = totalPayablesAndAccruedExpenses;
+//         } else {
+//            pass;
+//         }
+//     });
+
+//     const payablesAccruedExpensesColumns = document.querySelectorAll('.payables-accrued-column');
+//     const pensionRetirementPlansCurrentColumns = document.querySelectorAll('.pension-post-retirement-column');
+//     const debtLeaseColumns = document.querySelectorAll('.current-debt-and-capital-lease-obligation-column');
+//     const deferredLiabilitiesColumns = document.querySelectorAll('.deferred-liabilities-column');
+//     const otherCurrentLiabilitiesColumns = document.querySelectorAll('.other-current-liabilities-column');
+
+//     // Loop through one of the columns to determine the number of rows
+//     payablesAccruedExpensesColumns.forEach((cell, index) => {
+//         const payablesAccruedExpenses = parseFloat(cell.innerText.trim()) || 0;
+//         const input = pensionRetirementPlansCurrentColumns[index].querySelector('input');
+//         const pensionRetirementPlansCurrent = parseFloat(input ? input.value : pensionRetirementPlansCurrentColumns[index].innerText.trim()) || 0;
+//         const debtLease = parseFloat(debtLeaseColumns[index].innerText.trim()) || 0;
+//         const deferredLiabilities = parseFloat(deferredLiabilitiesColumns[index].innerText.trim()) || 0;
+//         const otherCurrentLiabilities = parseFloat(otherCurrentLiabilitiesColumns[index].querySelector('input')?.value || otherCurrentLiabilitiesColumns[index].innerText.trim()) || 0;
+//         console.log(pensionRetirementPlansCurrent)
+//         // Calculate total Current Liabilities
+//         const totalCurrentLiabilities = payablesAccruedExpenses + pensionRetirementPlansCurrent + debtLease + deferredLiabilities + otherCurrentLiabilities;
+
+//         // Find the element where this total should be displayed
+//         const grossppe = document.getElementById(`current-liabilities-${index + 1}`);
+//         if (grossppe) {
+//             grossppe.innerText = totalCurrentLiabilities;
+//         } else {
+//             pass;
+//         }
+//     });
+
+//     const longTermDebtColumns = document.querySelectorAll('.long-term-debt-column input');
+//     const capitalLeaseColumns = document.querySelectorAll('.long-term-capital-lease-column input');
+
+//     longTermDebtColumns.forEach((input, index) => {
+//         const longTermDebt = parseFloat(input.value.trim()) || 0;
+//         const capitalLeaseInput = capitalLeaseColumns[index];
+//         const capitalLease = parseFloat(capitalLeaseInput.value.trim()) || 0;
+
+//         const totalLongTermDebtAndLease = longTermDebt + capitalLease;
+
+//         // Ensure the ID is set correctly in the total calculation element
+//         const totalElement = document.getElementById(`long-term-debt-and-capital-lease-obligation-${index + 1}`);
+//         if (totalElement) {
+//             totalElement.innerText = totalLongTermDebtAndLease;
+//         } else {
+//             (`Total Long Term Debt and Capital Lease Obligation element not found for column ${index + 1}`);
+//         }
+//     });
+//     const deferredTaxColumns = document.querySelectorAll('.non-current-deferred-taxes-column input');
+//     const deferredRevenueColumns = document.querySelectorAll('.non-current-deferred-revenue-column input');
+
+//     deferredTaxColumns.forEach((input, index) => {
+//         const deferredTax = parseFloat(input.value.trim()) || 0;
+//         const deferredRevenueInput = deferredRevenueColumns[index];
+//         const deferredRevenue = parseFloat(deferredRevenueInput.value.trim()) || 0;
+
+//         const totalDeferred = deferredTax + deferredRevenue;
+
+//         // Ensure the ID is set correctly in the total calculation element
+//         const totalElement = document.getElementById(`non-current-deferred-liabilities-${index + 1}`);
+//         if (totalElement) {
+//             totalElement.innerText = totalDeferred;
+//         } else {
+//             (`Total Deferred element not found for column ${index + 1}`);
+//         }
+//     });
+//     const rows = document.querySelectorAll('.liability-row'); // Adjust class to match your rows if needed
+
+//     rows.forEach(row => {
+//     // You may need to adjust the query selector to match your actual input fields or text content
+//     const longTermDebtAndLease = parseFloat(row.querySelector('.long-term-debt-lease-input').value) || 0;
+//     const deferredLiabilities = parseFloat(row.querySelector('.deferred-liabilities-input').value) || 0;
+//     const tradePayables = parseFloat(row.querySelector('.trade-payables-input').value) || 0;
+//     const otherLiabilities = parseFloat(row.querySelector('.other-liabilities-input').value) || 0;
+
+//     const totalLiabilities = longTermDebtAndLease + deferredLiabilities + tradePayables + otherLiabilities;
+
+//     const totalElement = row.querySelector('.total-liabilities-output'); // Adjust ID or class to match your total field
+//     if (totalElement) {
+//         totalElement.innerText = totalLiabilities.toFixed(2);
+//     } else {
+//         console.error('Total liabilities element not found');
+//     }
+// });
+// const nonCurrentLiabilitiesColumns = document.querySelectorAll('.other-non-current-liabilities-column input');
+//     const tradeOtherPayablesColumns = document.querySelectorAll('.trade-other-payables-column input');
+
+//     // Loop through each of the input columns by index
+//     nonCurrentLiabilitiesColumns.forEach((input, index) => {
+//         const nonCurrentLiabilities = parseFloat(input.value.trim()) || 0;
+//         const tradeOtherPayables = parseFloat(tradeOtherPayablesColumns[index].value.trim()) || 0;
+
+//         // Fetch the auto-calculated values from other columns
+//         const longTermDebtLease = parseFloat(document.querySelector(`#long-term-debt-and-capital-lease-obligation-${index + 1}`).innerText.trim()) || 0;
+//         const otherNonCurrentLiabilities = parseFloat(document.querySelector(`#other-non-current-liabilities-${index + 1}`).innerText.trim()) || 0;
+
+//         // Calculate the total for this index
+//         const total = longTermDebtLease + nonCurrentLiabilities + tradeOtherPayables + otherNonCurrentLiabilities;
+
+//         // Locate the total element by constructing its ID based on index + 1
+//         const totalElement = document.getElementById(`total-non-current-liabilities-net-minority-interest-${index + 1}`);
+//         if (totalElement) {
+//             totalElement.innerText = total.toFixed(2); // Update the text with the calculated total, formatted to 2 decimal places
+//         } else {
+//             console.error(`Total element not found for index ${index + 1}`);
+//         }
+//     });
+//     const commonStockInputs = document.querySelectorAll('.common-stock-column input'); // Ensure this class matches your actual HTML
+
+// commonStockInputs.forEach((input, index) => {
+//     const commonStock = parseFloat(input.value.trim()) || 0;
+
+//     // Assuming the Capital Stock is displayed directly and needs to be updated
+//     const capitalStockElement = document.getElementById(`capital-stock-${index + 1}`);
+//     if (capitalStockElement) {
+//         capitalStockElement.innerText = commonStock.toFixed(2); // or any other calculation as required
+//     } else {
+//         console.error(`Capital Stock element not found for index ${index + 1}`);
+//     }
+// });
+// const gainsLossesInputs = document.querySelectorAll('.gains-losses-column input');
+//     const otherEquityAdjustmentsInputs = document.querySelectorAll('.other-equity-adjustments-column input');
+
+//     gainsLossesInputs.forEach((input, index) => {
+//         const gainsLosses = parseFloat(input.value.trim()) || 0;
+//         const otherEquityAdjustments = parseFloat(otherEquityAdjustmentsInputs[index].value.trim()) || 0;
+
+//         // Fetching auto-calculated values directly from their respective elements
+//         const capitalStock = parseFloat(document.getElementById(`capital-stock-${index + 1}`).innerText.trim()) || 0;
+//         const retainedEarnings = parseFloat(document.getElementById(`retained-earnings-${index + 1}`).innerText.trim()) || 0;
+
+//         // Calculate the total for this index
+//         const totalStockholdersEquity = capitalStock + retainedEarnings + gainsLosses + otherEquityAdjustments;
+
+//         // Locate the total element by constructing its ID based on index + 1
+//         const totalstock = document.getElementById(`stockholders-equity-${index + 1}`);
+//         if (totalstock) {
+//             totalstock.innerText = totalStockholdersEquity.toFixed(2); // Update the text with the calculated total, formatted to 2 decimal places
+//         } else {
+//             console.error(`Stockholders' Equity element not found for index ${index + 1}`);
+//         }
+//     });
+//     const stockholdersEquityElements = document.querySelectorAll('.stockholders-equity-column'); // Ensure this class matches your actual HTML
+
+//     stockholdersEquityElements.forEach((element, index) => {
+//     const stockholdersEquity = parseFloat(element.innerText.trim()) || 0;
+
+//     // Assuming the Total Equity Gross Minority Interest is displayed directly and needs to be updated
+//     const totalEquityGrossMinorityInterestElement = document.getElementById(`total-equity-gross-minority-interest-${index + 1}`);
+//     if (totalEquityGrossMinorityInterestElement) {
+//         totalEquityGrossMinorityInterestElement.innerText = stockholdersEquity.toFixed(2); // You can modify this calculation if needed
+//     } else {
+//         console.error(`Total Equity Gross Minority Interest element not found for index ${index + 1}`);
+//     }
+// });
+
+//     }
+//     document.querySelectorAll('.long_term_equity_investment_column input').forEach(input => {
+// input.addEventListener('input', calculatetotal);  // Calculate on input events
+// });
+// document.querySelectorAll('.goodwill_column input, .other_intangible_assets_column input').forEach(input => {
+//     input.addEventListener('input', calculatetotal);  // Calculate on input events
+// });
+
+
+// document.querySelectorAll(' .accumulated_depreciation_column input').forEach(input => {
+//     input.addEventListener('input', calculatetotal);  // Calculate Net PPE on input events
+// });
+// document.querySelectorAll('.other_non_current_assets_column input').forEach(input => {
+//     input.addEventListener('input', calculatetotal);
+// });
+// document.querySelectorAll('.accounts_payable_column input, .income_tax_payable_column input').forEach(input => {
+//     input.addEventListener('input', calculatetotal);  // Calculate on input events
+// });
+// document.querySelectorAll('.current-debt-column input, .capital-lease-column input').forEach(input => {
+//     input.addEventListener('input', calculatetotal);  // Calculate on input events
+// });
+
+// document.querySelectorAll('.deferred-revenue-column input').forEach(input => {
+//     input.addEventListener('input', calculatetotal);  // Calculate on input events
+// });
+
+// document.querySelectorAll('.pension-post-retirement-column input, .other-current-liabilities-column input').forEach(input => {
+//     input.addEventListener('input', calculatetotal);  // Calculate on input events
+// });
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Initially filter the table to show only monthly values
+    filterTable('monthly');
+
+    // Add event listeners to the buttons
+    document.querySelector('.btn-group').addEventListener('click', function (event) {
+        const target = event.target;
+        if (target.tagName === 'BUTTON') {
+            const period = target.textContent.trim().toLowerCase();
+            filterTable(period);
+        }
+    });
+});
+
+function filterTable(period) {
+    const headers = document.querySelectorAll('th .period-type');
+    const rows = document.querySelectorAll('tbody tr');
+
+    headers.forEach((header, index) => {
+        const periodType = header.textContent.trim().toLowerCase();
+        if (periodType === period) {
+            showColumn(index + 1);  // Show the column corresponding to the period
+        } else {
+            hideColumn(index + 1);  // Hide the column corresponding to the period
+        }
+    });
+
+    showColumn(0);  // Ensure the first column (Breakdown) is always shown
+}
+
+function showColumn(index) {
+    // Show the header
+    document.querySelectorAll('th')[index].style.display = ''; 
+
+    // Show all cells in this column
+    const rows = document.querySelectorAll('tbody tr');
+    rows.forEach(row => {
+        row.querySelectorAll('td')[index].style.display = ''; 
+    });
+}
+
+function hideColumn(index) {
+    // Hide the header
+    document.querySelectorAll('th')[index].style.display = 'none'; 
+
+    // Hide all cells in this column
+    const rows = document.querySelectorAll('tbody tr');
+    rows.forEach(row => {
+        row.querySelectorAll('td')[index].style.display = 'none';
+    });
+}
+
+</script>
+{% endblock content %}
