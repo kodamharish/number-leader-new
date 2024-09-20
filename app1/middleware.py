@@ -47,11 +47,13 @@ class SessionExpiryMiddleware(MiddlewareMixin):
         about_url = reverse('about')  # Get the URL for the about page
         services = reverse('services')  # Get the URL for the services page
         contact = reverse('contact')  # Get the URL for the contact page
+        products = reverse('products')  # Get the URL for the products page
+
         
 
 
         # Define a list of paths to exclude from session check
-        excluded_paths = [login_url, signup_url, home_url, about_url,services,contact,'/']
+        excluded_paths = [login_url, signup_url, home_url, about_url,services,contact,products,'/']
         
         if not request.session.get('current_user_id') and not request.session.get('current_subuser_id'):
             # User is not authenticated if neither session variable is set

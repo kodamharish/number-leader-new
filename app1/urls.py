@@ -9,9 +9,7 @@ urlpatterns = [
     path('about',about,name='about'),
     path('services',services,name='services'),
     path('contact',contact,name='contact'),
-    path('productspage', productspage, name='productspage'),
-
-
+    path('products',products_page, name='products'),
     #login,logout
     path('login',login,name='login'),
     path('logout',logout,name='logout'),

@@ -13,24 +13,29 @@
         padding: 0;
     }
     
-
     .small-plus-button {
-        font-size: 2rem;
-        color: black;
-        text-align: center;
-        cursor: pointer;
-        display: block;
-        position: absolute;
-        top: 60px;
-        right: 20px;
-        z-index: 9999;
-    }
+    font-size: 2rem;
+    color: black;
+    text-align: center;
+    cursor: pointer;
+    position: absolute;
+    top: 70px; /* Align with the breadcrumb */
+    right: 70px; /* Adjust this value to control space between breadcrumb and button */
+    z-index: 10000;
+}
 
 
         .entry-form {
             margin-top: 20px;
-            display: none;
+            
         }
+        #entryForm {
+    display: block;
+    /* padding: 20px;  Ensure enough space inside the form */
+    height: 680px;
+    overflow-y: auto;
+}
+
 
         .product-list {
             margin-top: 20px;
@@ -48,11 +53,14 @@
             justify-content: space-between;
             align-items: flex-start;
             overflow-y: auto;
+            margin-left: -15px;
         }
 
         .form-container {
             display: flex;
             flex: 1;
+            width: 90%;
+            margin-left: 10px;
         }
 
         .form-column {
@@ -112,11 +120,17 @@
         }
 
         .submit-button {
-            position: relative;
-            display: block;
-            margin-top: 20px;
-            margin-left: auto;
-        }
+    position: relative;
+    display: block;
+    margin-top: -20px;  /* Add some space above the button */
+    margin-left: auto;
+    margin-right: auto;  /* Center the button horizontally */
+    z-index: 1000;  /* Ensure the button appears above other elements */
+    width: fit-content;  /* Ensure the button is not stretched */
+    padding: 10px 20px;  /* Add padding to make the button easily clickable */
+}
+
+
 
         .divider {
             border-top: 1px solid grey;
@@ -237,15 +251,15 @@
     flex-direction: column; 
 }
 
-.breadcrumb{
-            font-size: 16px;
-            color: black;
-            flex:1;
-            margin-top: 20px;
-            margin-left: 250px;
-            font-family: 'Arial MT Rounded';
-        }
-
+.breadcrumb {
+    font-size: 14px;
+    color: black;
+    flex: 1;
+    margin-top: 25px;
+    margin-left: 260px;
+    font-family: 'Arial MT Rounded';
+    position: relative; /* Add this to position the breadcrumb */
+}
         .container::-webkit-scrollbar {
             width: 0px;
             background: transparent; /* For Chrome/Safari/Webkit */
@@ -255,8 +269,36 @@
             scrollbar-width: none; /* For Firefox */
             -ms-overflow-style: none;  /* For Internet Explorer and Edge */
         }
+       
     
-    
+        .bold-text {
+            font-weight: bold;
+        }
+        .card-buttons {
+    display: flex; /* Aligns the buttons in a row */
+    gap: 10px; /* Adds space between the buttons */
+    justify-content: flex-start; /* Align buttons to the left, adjust as needed */
+    align-items: center; /* Vertically aligns the buttons in the center */
+}
+
+.edit-button, .delete-button {
+    margin: 0; /* Remove default margin that might affect layout */
+    background-color: white;
+    color: black;
+    outline: none !important;
+    box-shadow: none !important; /* Remove the box shadow */
+    border: none !important; /* Remove the border */
+}
+ .delete-button {
+    margin: 0; /* Remove default margin that might affect layout */
+    background-color: white;
+    color: red;
+    outline: none !important;
+    box-shadow: none !important; /* Remove the box shadow */
+    border: none !important; /* Remove the border */
+}
+
+
     </style>
 
 <body>
@@ -336,6 +378,7 @@
                 </div>
             </div>
             <button type="button" class="btn btn-primary submit-button" onclick="saveProduct()">Add Product</button>
+
         </div>
 
         <!-- <div id="productList" class="product-list"></div> -->
@@ -443,10 +486,16 @@ function displayProducts() {
                     </div>
                 </div>
             </div>
-            <div class="card-buttons">
-                <button class="btn btn-secondary edit-button" onclick="editProduct(${index})">Edit</button>
-                <button class="btn btn-danger delete-button" onclick="deleteProduct(${index})">Delete</button>
-            </div>
+           <div class="card-buttons">
+    <button class="btn btn-secondary edit-button" onclick="editProduct(${index})">
+        <i class="fas fa-edit action-icon"></i>
+    </button>
+    <button class="btn btn-danger delete-button" onclick="deleteProduct(${index})">
+        <i class="fas fa-trash action-icon"></i>
+    </button>
+</div>
+
+
         `;
         productList.appendChild(productCard); // Add the product card to the list
     });
@@ -688,8 +737,10 @@ fetchProducts(); // Load products when the page is loaded
  // Initialize the page
  displayProducts();
  if (products.length === 0) {
-     document.getElementById('entryForm').style.display = 'block';
- }
+    document.getElementById('entryForm').style.display = 'block';  // Make sure form is displayed
+    document.querySelector('.submit-button').style.display = 'block';  // Ensure button is not hidden
+}
+
 
 
 

@@ -44,9 +44,12 @@ def services(request):
 
 def contact(request):
     return render(request,'contact_us.html')
-def productspage(request):
-    return render(request, 'productspage.html')
 
+
+
+
+def products_page(request):
+    return render(request,'products.html')
 # #Login and Logout
 
 # # def login(request):

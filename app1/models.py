@@ -23,7 +23,7 @@ class User(models.Model):
     username = models.CharField(max_length=50, unique=True, null=False)
     email = models.EmailField(null=False)
     phone_number = models.IntegerField(null=False)
-    linkedin_url = models.URLField(null=True)
+    linkedin_url = models.CharField(max_length=100,null=True)
     firstname = models.CharField(max_length=50,null=False)  
     lastname = models.CharField(max_length=50,null=True)
     password = models.CharField(max_length=150,null=False)  
@@ -51,8 +51,8 @@ class Company(models.Model):
     date_of_incorporation = models.DateField(null= True)
     email = models.EmailField(null=True)
     phone=models.IntegerField(null=True)
-    website_url = models.URLField(null=True)
-    linkedin_url = models.URLField(null=True)   
+    website_url = models.CharField(max_length=100,null=True)
+    linkedin_url = models.CharField(max_length=100,null=True)   
     business_type = models.CharField(max_length=255, null=True)
     sector = models.CharField(max_length=255, null=True)
     company_type = models.CharField(max_length=10, null=True)
@@ -129,7 +129,7 @@ class BusinessStage(models.Model):
 class Founder(models.Model):
     company_id=models.ForeignKey(Company, on_delete=models.CASCADE,related_name='founders')
     name=models.CharField(max_length=50)
-    linkedin_url=models.URLField()
+    linkedin_url=models.CharField(max_length=100,null=True)
     short_profile=models.TextField(null=True)
     photo=models.ImageField(upload_to='founder_photos',null=True)
     title=models.CharField(null=True, max_length=20)
@@ -171,7 +171,7 @@ class SolvedProblem(models.Model):
 
 class Competitor(models.Model):
     company_id = models.ForeignKey(Company, on_delete=models.CASCADE,related_name='competitors')
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200,null=True)
 
     def __str__(self):
         return self.name
@@ -181,7 +181,7 @@ class Competitor(models.Model):
 class SocialMedia(models.Model):
     company_id=models.ForeignKey(Company,on_delete=models.CASCADE,related_name='social_media_urls')
     #name=models.CharField(max_length=25)
-    url=models.URLField()
+    url=models.CharField(max_length=100,null=True)
 
 class Client(models.Model):
     company_id=models.ForeignKey(Company, on_delete=models.CASCADE,related_name='clients')
@@ -209,7 +209,7 @@ class Team(models.Model):
     username = models.CharField(max_length=50, unique=True, null=False)
     email = models.EmailField(null=False)
     phone_number = models.IntegerField(null=False)
-    linkedin_url = models.URLField(null=True)
+    linkedin_url = models.CharField(max_length=100,null=True)
     firstname = models.CharField(max_length=50,null=False)
     lastname = models.CharField(max_length=50,null=True)
     password = models.CharField(max_length=10,null=False)  

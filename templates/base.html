@@ -44,8 +44,10 @@
             <a class="nav-link" href="{% url 'about'%}">About Us</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{%  url 'productspage' %}">Products</a>
+            <a class="nav-link" href="{% url 'products' %}">Products</a>
           </li>
+         
+            
           <li class="nav-item">
             <a class="nav-link" href="{% url 'services' %}">Services</a>
           </li>
@@ -124,7 +126,7 @@
             </ul>
           </li>
 
-          {% if current_user.company_type == 'startup' %}
+          {% if current_user.company_type == 'Startup' %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'investor_dashboard' %}" >Investor</a>
           </li>
@@ -163,7 +165,7 @@
           </li>
           {% endif %}
 
-          {% if current_user.company_type == 'enabler' %}
+          {% if current_user.company_type == 'CA_firm' %}
           <li class="nav-item">
             <a class="nav-link" href="#">Startup</a>
           </li>
