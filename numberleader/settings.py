@@ -49,8 +49,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'app1.middleware.SessionExpiryMiddleware',  # Add this line
-    'app1.middleware.LoginRedirectMiddleware',  # Add this line
+    # 'app1.middleware.SessionExpiryMiddleware',  # Add this line
+    # 'app1.middleware.LoginRedirectMiddleware',  # Add this line
 
 ]
 
@@ -149,11 +149,12 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #Mail Configuration
+EMAIL_FROM_USER='prasannasgkumar@gmail.com'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS=True
 EMAIL_HOST='smtp.gmail.com'
-EMAIL_HOST_USER='harishkodam1997@gmail.com'
-EMAIL_HOST_PASSWORD='vzom miqx vfdn cxbc'
+EMAIL_HOST_USER='prasannasgkumar@gmail.com'
+EMAIL_HOST_PASSWORD='fycw ipcd lqua qatk'
 EMAIL_PORT=587
 
 # Session settings

@@ -155,6 +155,124 @@
       margin-top: 1rem;
     }
   }
+  .register-box {
+            
+            width: 500px;
+            height: 100vh;
+            padding: 40px;
+            background: linear-gradient(135deg, rgb(36, 141, 197), rgb(11, 58, 70));
+            color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h2 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .form-row .did-floating-label-content {
+            flex: 1;
+        }
+
+        .did-floating-label-content {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .did-floating-label {
+            color: #fff;
+            font-size: 13px;
+            font-weight: normal;
+            position: absolute;
+            pointer-events: none;
+            left: 15px;
+            top: 11px;
+            padding: 0 5px;
+            background: transparent;
+            transition: 0.2s ease all;
+        }
+
+        .did-floating-input {
+            font-size: 14px;
+            width: 100%;
+            height: 36px;
+            padding: 0 20px;
+            background: rgba(255, 255, 255, 0.01);
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 10px;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            background-color: transparent;
+        }
+
+        .did-floating-input:focus {
+            outline: none;
+            border-color: rgba(187, 188, 190, 0.6);
+        }
+
+        .did-floating-input.filled ~ .did-floating-label {
+            top: -8px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Password toggle icon */
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            width: 100%;
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 10px;
+        }
+
+        .register-box button {
+            background-color:transparent;
+            color: white;
+            /* border: 1px solid rgba(255, 255, 255, 0.6); */
+            width: 50%;
+            padding: 10px;
+            margin-left: 100px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: block;
+            border: 1px solid white;
+        }
+
+        /* .register-box button:hover {
+            background-color: rgba(25, 243, 47, 0.4);
+            color: white;
+            transform: 0.3s ease;
+            width: 100%;
+            font-size: 14px;
+            display: block;
+            margin-left: 0px;
+            padding: 10px;
+        } */
+
 </style>
 
 <div class="split-screen">
@@ -164,7 +282,7 @@
         <h1>Welcome Back</h1>
         <p>Please sign in to your account</p>
       </div>
-      <form method="post">
+      <form method="post" action="{% url 'login' %}">
         {% csrf_token %}
         <div class="form-group">
           <label for="username"><b>Username</b></label>
@@ -173,6 +291,7 @@
         <div class="form-group">
           <label for="password"><b>Password</b></label>
           <input type="password" class="form-control" id="password" name="password" required>
+        
         </div>
         <div class="d-flex justify-content-between align-items-center mb-3">
           <div class="form-check">
@@ -189,19 +308,82 @@
       <p class="text-danger text-center mt-2 fw-bold" style="font-size: 0.9rem;">{{ msg }}</p>
       {% endfor %}
 
-      <div class="social-login">
-        <a href="#" class="social-icon"><i class="fab fa-google"></i></a>
-        <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
-        <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+     
+    </div>
+  </div>
+  <!-- <div class="right"> -->
+    <div class="register-box">
+      <h2>New here?</h2>
+      <p style="text-align: center;">Sign up and discover great opportunities.</p>
+      <form method="POST" enctype="multipart/form-data" action="{% url 'signup' %}">
+        {% csrf_token %}
+
+        <div class="form-row">
+          <div class="did-floating-label-content">
+              <input type="text" class="did-floating-input" name="first_name" placeholder="" required>
+              <label class="did-floating-label">First Name</label>
+          </div>
+          <div class="did-floating-label-content">
+              <input type="text" class="did-floating-input" name="last_name" placeholder="" required>
+              <label class="did-floating-label">Last Name</label>
+          </div>
       </div>
-    </div>
+      <div class="did-floating-label-content">
+          <input type="text" class="did-floating-input" name="username_email" placeholder="" required>
+          <label class="did-floating-label">Username:Email</label>
+      </div>
+      <div class="did-floating-label-content">
+          <input type="text" class="did-floating-input" name="company_name" placeholder="" required>
+          <label class="did-floating-label">Company Name</label>
+      </div>
+      
+      <div class="form-row password-container">
+          <div class="did-floating-label-content">
+              <input type="password" class="did-floating-input" id="register-password" name="password1" placeholder="" required>
+              <label class="did-floating-label">Password</label>
+              <i class="fas fa-eye toggle-password" data-toggle="#register-password"></i>
+          </div>
+          <div class="did-floating-label-content">
+              <input type="password" class="did-floating-input" id="register-confirm-password" name="confirm_password" placeholder="" required>
+              <label class="did-floating-label">Confirm Password</label>
+              <i class="fas fa-eye toggle-password" data-toggle="#register-confirm-password"></i>
+          </div>
+      </div>
+      
+
+          <button type="submit" class="mt-3">Register</button>
+      </form>
   </div>
-  <div class="right">
-    <div class="signup-message">
-      <h1>New here?</h1>
-      <p>Sign up and discover great opportunities.</p>
-      <a href="{% url 'signup' %}" class="btn btn-secondary btn-custom">Sign Up</a>
-    </div>
+
   </div>
-</div>
+<!-- </div> -->
+
+<script>
+  // Toggle Password Visibility
+  document.querySelectorAll('.toggle-password').forEach(item => {
+      item.addEventListener('click', function() {
+          const input = document.querySelector(this.getAttribute('data-toggle'));
+          if (input.getAttribute('type') === 'password') {
+              input.setAttribute('type', 'text');
+              this.classList.remove('fa-eye');
+              this.classList.add('fa-eye-slash');
+          } else {
+              input.setAttribute('type', 'password');
+              this.classList.remove('fa-eye-slash');
+              this.classList.add('fa-eye');
+          }
+      });
+  });
+
+  // Keep label floating when input is filled
+  document.querySelectorAll('.did-floating-input').forEach(input => {
+      input.addEventListener('input', function() {
+          if (this.value.trim() !== '') {
+              this.classList.add('filled');
+          } else {
+              this.classList.remove('filled');
+          }
+      });
+  });
+</script>
 {% endblock content %}

@@ -22,13 +22,14 @@ class User(models.Model):
     user_id = models.CharField(max_length=10, primary_key=True, editable=False)
     username = models.CharField(max_length=50, unique=True, null=False)
     email = models.EmailField(null=False)
-    phone_number = models.IntegerField(null=False)
+    phone_number = models.IntegerField(null=True)
     linkedin_url = models.CharField(max_length=100,null=True)
     firstname = models.CharField(max_length=50,null=False)  
     lastname = models.CharField(max_length=50,null=True)
     password = models.CharField(max_length=150,null=False)  
     user_type = models.CharField(max_length=12,default='admin')
     company_type = models.CharField(max_length=20)
+    email_verified=models.BooleanField(null=True, default=False)
 
     def save(self, *args, **kwargs):
         if not self.user_id:
@@ -48,7 +49,7 @@ class Company(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE,related_name='companies')
     company_id = models.CharField(max_length=10, primary_key=True, editable=False)
     name = models.CharField(max_length=100, null=True)
-    date_of_incorporation = models.DateField(null= True)
+    date_of_incorporation = models.CharField(max_length=5, null=True)
     email = models.EmailField(null=True)
     phone=models.IntegerField(null=True)
     website_url = models.CharField(max_length=100,null=True)

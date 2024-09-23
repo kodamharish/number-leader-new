@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect,get_object_or_404
+from django.urls import reverse
 from .models import *
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
@@ -31,7 +32,9 @@ from datetime import date
 import calendar
 import json
 from datetime import datetime
+from .utils import generate_token
 
+import threading
 
 # Create your views here.
 def home(request):
@@ -50,153 +53,15 @@ def contact(request):
 
 def products_page(request):
     return render(request,'products.html')
-# #Login and Logout
 
-# # def login(request):
-# #     if request.method == 'POST':
-# #         username = request.POST.get('username')
-# #         password = request.POST.get('password')
-        
-# #         # Check if the user exists in both User and Team models
-# #         user = User.objects.filter(username=username).first()
-# #         team = Team.objects.filter(username=username).first()
-
-# #         if user:
-# #             if check_password(password, user.password):
-# #                 request.session['current_user_id'] = user.user_id
-# #                 if user.user_type == 'admin':
-# #                     return redirect('admin_dashboard')
-# #                 if user.user_type == 'super_admin':
-# #                     return redirect('super_admin_dashboard')
-# #                 # elif user.user_type == 'editor':
-# #                 #     return redirect('editor_dashboard')
-# #                 # elif user.user_type == 'user':
-# #                 #     return redirect('user_dashboard')
-# #             else:
-# #                 messages.error(request, 'Invalid username or password')
-# #         elif team:
-# #             if check_password(password, team.password):
-# #                 request.session['current_subuser_id'] = team.subuser_id
-# #                 if team.user_type == 'admin':
-# #                     return redirect('admin_dashboard')
-# #                 elif team.user_type == 'editor':
-# #                     return redirect('editor_dashboard')
-# #                 elif team.user_type == 'user':
-# #                     return redirect('user_dashboard')
-# #             else:
-# #                 messages.error(request, 'Invalid username or password')
-# #         else:
-# #             messages.error(request, 'Invalid username or password')
-# #         return render(request, 'login.html')
-# #     else:
-# #         return render(request, 'login.html')
-    
-# def login1(request):
-#     first_company_id = first_company_id
-#     if request.method == 'POST':
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-#         remember_me = request.POST.get('remember_me')  # Get the "Remember Me" value
-
-#         # Check if the user exists in both User and Team models
-#         user = User.objects.filter(username=username).first()
-#         team = Team.objects.filter(username=username).first()
-
-#         if user:
-#             if check_password(password, user.password):
-#                 request.session['current_user_id'] = user.user_id
-#                 if remember_me:
-#                     request.session.set_expiry(86400)  # 1 day
-#                     # return redirect('admin_dashboard')
-
-#                 else:
-#                     request.session.set_expiry(0)  # Browser close
-#                 if user.user_type == 'admin':
-#                     return redirect('admin_dashboard',first_company_id)
-#                 if user.user_type == 'super_admin':
-#                     return redirect('super_admin_dashboard')
-               
-#             else:
-#                 messages.error(request, 'Invalid username or password')
-#         elif team:
-#             if check_password(password, team.password):
-#                 request.session['current_subuser_id'] = team.subuser_id
-#                 if remember_me:
-#                     request.session.set_expiry(86400)  # 1 day
-#                 else:
-#                     request.session.set_expiry(0)  # Browser close
-#                 if team.user_type == 'admin':
-#                     return redirect('admin_dashboard')
-#                 elif team.user_type == 'editor':
-#                     return redirect('editor_dashboard')
-#                 elif team.user_type == 'user':
-#                     return redirect('user_dashboard')
-#             else:
-#                 messages.error(request, 'Invalid username or password')
-#         else:
-#             messages.error(request, 'Invalid username or password')
-#         return render(request, 'login.html')
-#     else:
-#         return render(request, 'login.html')
-    
-
-
-
-# def login11(request):
-
-#     if request.method == 'POST':
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-#         remember_me = request.POST.get('remember_me')  # Get the "Remember Me" value
-
-#         # Check if the user exists in both User and Team models
-#         user = User.objects.filter(username=username).first()
-#         team = Team.objects.filter(username=username).first()
-
-#         if user:
-#             if check_password(password, user.password):
-#                 request.session['current_user_id'] = user.user_id
-#                 if remember_me:
-#                     request.session.set_expiry(86400)  # 1 day
-#                 else:
-#                     request.session.set_expiry(0)  # Browser close
-#                 first_company_id = first_company_id
-#                 if user.user_type == 'admin':
-#                     return redirect('admin_dashboard',first_company_id)
-#                 elif user.user_type == 'super_admin':
-#                     return redirect('super_admin_dashboard')
-#                 # Uncomment and adjust these lines if needed
-#                 # elif user.user_type == 'editor':
-#                 #     return redirect('editor_dashboard')
-#                 # elif user.user_type == 'user':
-#                 #     return redirect('user_dashboard')
-#             else:
-#                 messages.error(request, 'Invalid username or password')
-#         elif team:
-#             if check_password(password, team.password):
-#                 request.session['current_subuser_id'] = team.subuser_id
-#                 if remember_me:
-#                     request.session.set_expiry(86400)  # 1 day
-#                 else:
-#                     request.session.set_expiry(0)  # Browser close
-                
-#                 if team.user_type == 'admin':
-#                     return redirect('admin_dashboard')
-#                 elif team.user_type == 'editor':
-#                     return redirect('editor_dashboard')
-#                 elif team.user_type == 'user':
-#                     return redirect('user_dashboard')
-#             else:
-#                 messages.error(request, 'Invalid username or password')
-#         else:
-#             messages.error(request, 'Invalid username or password')
-        
-#         return render(request, 'login.html')
-#     else:
-#         return render(request, 'login.html')
 
 
 from .context_processors import getAllCompanies
+from .context_processors import getAllCompanies
+from django.contrib.auth.hashers import check_password
+from django.contrib import messages
+from django.shortcuts import render, redirect
+
 def login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -204,16 +69,21 @@ def login(request):
         remember_me = request.POST.get('remember_me')  # Get the "Remember Me" value
 
         # Check if the user exists in both User and Team models
-        user = User.objects.filter(username=username).first()
+        user = User.objects.filter(email=username).first()
         team = Team.objects.filter(username=username).first()
 
         if user:
+            # Check if the email is verified before proceeding
+            if not user.email_verified:
+                messages.error(request, 'Please verify your email address before logging in.')
+                return render(request, 'login.html')
+
             if check_password(password, user.password):
                 request.session['current_user_id'] = user.user_id
                 if remember_me:
                     request.session.set_expiry(86400)  # 1 day
                 else:
-                    request.session.set_expiry(0)  # Browser close
+                    request.session.set_expiry(0)  # Session ends when browser is closed
 
                 # Get the first_company_id using getAllCompanies function
                 companies_info = getAllCompanies(request)
@@ -222,11 +92,10 @@ def login(request):
                 first_company_id = companies_info.get('first_company_id')
                 current_user_company_profile2 = current_user_company_profile1.get('current_user_company_profiles')
 
-                print('current_user_company_profile2',current_user_company_profile2)
+                print('current_user_company_profile2', current_user_company_profile2)
+
                 if user.user_type == 'admin':
                     return redirect('admin_dashboard')
-                    
-
                 elif user.user_type == 'super_admin':
                     return redirect('super_admin_dashboard')
                 # Uncomment and adjust these lines if needed
@@ -236,14 +105,15 @@ def login(request):
                 #     return redirect('user_dashboard')
             else:
                 messages.error(request, 'Invalid username or password')
+        
         elif team:
             if check_password(password, team.password):
                 request.session['current_subuser_id'] = team.subuser_id
                 if remember_me:
                     request.session.set_expiry(86400)  # 1 day
                 else:
-                    request.session.set_expiry(0)  # Browser close
-                
+                    request.session.set_expiry(0)  # Session ends when browser is closed
+
                 if team.user_type == 'admin':
                     return redirect('admin_dashboard')
                 elif team.user_type == 'editor':
@@ -252,224 +122,150 @@ def login(request):
                     return redirect('user_dashboard')
             else:
                 messages.error(request, 'Invalid username or password')
+        
         else:
             messages.error(request, 'Invalid username or password')
-        
+
         return render(request, 'login.html')
     else:
         return render(request, 'login.html')
+
 
 
 def logout(request):
     request.session.flush()
     return redirect('login')
 
+class EmailThread(threading.Thread):
+    def __init__(self,email):
+        self.email=email
+        threading.Thread.__init__(self)
+    
+    def run(self):
+        self.email.send()
 
+from django.core.mail import send_mail
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_str
+from django.core.mail import EmailMessage
+from django.conf import settings
 
+def send_activation_email(user, request):
+    # Generate activation link
+    current_site = get_current_site(request)
+    subject = 'Activate Your Account on Number Leader'
+    uid = urlsafe_base64_encode(force_bytes(user.pk))  # Encode the user's primary key
+    # activation_link = f'http://{current_site.domain}/activate/{uid}/{token}/'  # Construct the activation link
+    email_body=render_to_string('activate.html', {
+        'user':user,
+        'domain':current_site,
+        'uid':uid,
+        'token':generate_token.make_token(user),
+    })
+    email=EmailMessage(subject=subject, body=email_body, from_email=settings.EMAIL_FROM_USER, to=[user.email])
+    EmailThread(email).start()
+    # message = f'Dear {user.firstname},\n\nYour account has been successfully created on Number Leader.\n\nPlease activate your account by clicking the link below:\n\n{activation_link}\n\nThank you for signing up!'
+    # from_email = 'prasannasgkumar@gmail.com'
+    # recipient_list = [user.email]
 
-# Sign Up
-def signup1(request):
-    if request.method == 'POST':
-        # Extract form data using request.POST.get
-        #User Details
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        phone_number = request.POST.get('phone_number')
-        linkedin_url = request.POST.get('linkedin_url', '')  # Optional field
-        firstname = request.POST.get('firstname')
-        lastname = request.POST.get('lastname', '')  # Optional field
-        password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm_password')
+    # # Send the email
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt  
+def activate_user(request, uidb64, token):
+    
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+      
+        user = User.objects.get(pk=uid)
         
-        # Company Details
-        company_name = request.POST.get('company_name')
-        company_email = request.POST.get('company_email')
-        company_website_url = request.POST.get('company_website_url')
-        company_linkedin_url = request.POST.get('company_linkedin_url')
-        subscription_type = request.POST.get('subscription_type')
-        company_type = request.POST.get('company_type')
-        # Founders Details
-        #founder_name = request.POST.get('founder_name')
-        founder_name = request.POST.get('founder_firstname')
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist) as e:
+       
+        user = None
 
-        founder_email = request.POST.get('founder_email')
-        founder_linkedin_url = request.POST.get('founder_linkedin_url')
-        founder_phone_number = request.POST.get('founder_phone_number')
-        founder_short_profile = request.POST.get('founder_short_profile')
-        founder_photo = request.FILES.get('founder_photo')
-
-        # Validate passwords
-        if password != confirm_password:
-            messages.error(request,'Passwords do not match')
-            return redirect('signup')    
-        # Validate if the username or email already exists
-        if User.objects.filter(username=username).exists() or Team.objects.filter(username=username).exists():
-            messages.error(request,'Username already exists')
-            return redirect('signup')    
-        if User.objects.filter(email=email).exists() or Team.objects.filter(email=email).exists():
-            messages.error(request,'Email already exists')
-            return redirect('signup')
-            
-        # Create and save User object
-        user = User(
-            username=username,
-            email=email,
-            phone_number=phone_number,
-            linkedin_url=linkedin_url,
-            firstname=firstname,
-            lastname=lastname,
-            password=password,
-            company_type = company_type
-
-           
-        )
-        
+  
+    if user  and generate_token.check_token(user, token):
+        user.email_verified = True
         user.save()
-
-        # Ensure the user was saved correctly
-        if user.pk:
-            # Create and save Company object
-            company = Company(
-                user_id=user,  # This should match the foreign key field in Company model
-                name=company_name,
-                email=company_email,
-                website_url=company_website_url,
-                linkedin_url=company_linkedin_url,
-                subscription_type = subscription_type,
-                #company_type = company_type
-                
-            )
-            
-            company.save()
-            print(company_type,'company_type')
-
-            # Ensure the company was saved correctly
-            if company.pk:
-                company_id = Company.objects.get(company_id = company.pk)
-                founder =Founder(
-                    company_id = company_id,
-                    name=founder_name,
-                
-                    linkedin_url=founder_linkedin_url,
-                    
-                    short_profile = founder_short_profile,
-                    photo = founder_photo
-                )
-                founder.save()
-                messages.error(request,'User Created Succesfully')
-                return redirect('signup')
-                
-            else:
-                messages.error(request,'Something went wrong please try again later')
-                return redirect('signup')
-                
-        else:
-            messages.error(request,'Something went wrong please try again later')
-            return redirect('signup')
-           
-    else:
-        return render(request, 'sign_up.html')
+        messages.success(request, 'Email Verification Successful. Please log in to your account.')
+        return redirect('login')
+    
+    return render(request, 'activation-failed.html', {'user':user})
 
 
 
-# Sign Up
+
+
+
+
+
+
 def signup(request):
     if request.method == 'POST':
-        # Extract form data using request.POST.get
-        #User Details
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        phone_number = request.POST.get('phone_number')
-        linkedin_url = request.POST.get('linkedin_url', '')  # Optional field
-        firstname = request.POST.get('firstname')
-        lastname = request.POST.get('lastname', '')  # Optional field
-        password = request.POST.get('password')
+        # Extract form data
+        # User Details
+        username = request.POST.get('username_email')
+        email = request.POST.get('username_email')
+        firstname = request.POST.get('first_name')
+        lastname = request.POST.get('last_name', '')  # Optional field
+        password = request.POST.get('password1')
         confirm_password = request.POST.get('confirm_password')
         
         # Company Details
         company_name = request.POST.get('company_name')
-        company_email = request.POST.get('company_email')
-        company_website_url = request.POST.get('company_website_url')
-        company_linkedin_url = request.POST.get('company_linkedin_url')
-        subscription_type = request.POST.get('subscription_type')
-        company_type = request.POST.get('company_type')
-        # Founders Details
-        founder_name = request.POST.get('founder_firstname')
-        founder_email = request.POST.get('founder_email')
-        founder_linkedin_url = request.POST.get('founder_linkedin_url')
-        founder_phone_number = request.POST.get('founder_phone_number')
-        founder_short_profile = request.POST.get('founder_short_profile')
-        founder_photo = request.FILES.get('founder_photo')
 
         # Validate passwords
         if password != confirm_password:
-            messages.error(request,'Passwords do not match')
-            return redirect('signup')    
-        # Validate if the username or email already exists
+            messages.error(request, 'Passwords do not match')
+            return redirect('login')
+        
+        # Check if the username or email already exists
         if User.objects.filter(username=username).exists() or Team.objects.filter(username=username).exists():
-            messages.error(request,'Username already exists')
-            return redirect('signup')    
+            messages.error(request, 'Username already exists')
+            return redirect('login')
+        
         if User.objects.filter(email=email).exists() or Team.objects.filter(email=email).exists():
-            messages.error(request,'Email already exists')
-            return redirect('signup')
-            
+            messages.error(request, 'Email already exists')
+            return redirect('login')
+
         # Create and save User object
         user = User(
             username=username,
             email=email,
-            phone_number=phone_number,
-            linkedin_url=linkedin_url,
             firstname=firstname,
             lastname=lastname,
-            password=password,
-            company_type=company_type
-           
+            password=password,  # Make sure to hash the password before saving
         )
-        
         user.save()
 
         # Ensure the user was saved correctly
         if user.pk:
             # Create and save Company object
             company = Company(
-                user_id=user,  # This should match the foreign key field in Company model
+                user_id=user,  # Assuming user_id is a ForeignKey field in the Company model
                 name=company_name,
-                email=company_email,
-                website_url=company_website_url,
-                linkedin_url=company_linkedin_url,
-                subscription_type = subscription_type,
-                company_type = company_type
-                
             )
-            
             company.save()
 
-            # Ensure the company was saved correctly
             if company.pk:
-                company_id = Company.objects.get(company_id = company.pk)
-                founder =Founder(
-                    company_id = company_id,
-                    name=founder_name,
-                
-                    linkedin_url=founder_linkedin_url,
-                    
-                    short_profile = founder_short_profile,
-                    photo = founder_photo
-                )
-                founder.save()
-                messages.error(request,'User Created Succesfully')
-                return redirect('signup')
-                
+                # Call the send_activation_email function
+                send_activation_email(user, request)
+
+                messages.success(request, 'User and company created successfully. A confirmation email has been sent.')
+                return redirect('login')  # Redirect to login after successful signup
             else:
-                messages.error(request,'Something went wrong please try again later')
-                return redirect('signup')
-                
+                messages.error(request, 'Something went wrong. Please try again later.')
+                return redirect('login')
         else:
-            messages.error(request,'Something went wrong please try again later')
-            return redirect('signup')
-           
+            messages.error(request, 'Something went wrong. Please try again later.')
+            return redirect('login')
+    
+    # If request is GET, render the signup page
     else:
-        return render(request, 'sign_up.html')
+        return redirect('login')
 
 
 
@@ -3608,10 +3404,11 @@ def basicInformation(request, id):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-
+            print(data)
             company.name = data.get('company-name', company.name)
             company.email = data.get('email', company.email)
-            company.phone = data.get('phone', company.phone)  
+            company.phone = data.get('phone', company.phone) 
+            company.date_of_incorporation = data.get('founded-in', company.date_of_incorporation) 
             company.website_url = data.get('website', company.website_url)
             company.linkedin_url = data.get('linkedin', company.linkedin_url)
             company.location = data.get('address', company.location)

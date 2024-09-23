@@ -125,4 +125,6 @@ urlpatterns = [
     path('bench4/<str:id>/', bench4, name='bench4'),
     path('delete_bench/<str:line_no>/', delete_bench, name='delete_bench'),
 
+    path('activate-user/<uidb64>/<token>/', activate_user, name='activate'),
+
 ]
