@@ -362,7 +362,7 @@
                     <tr>
                     <td>Gross Profit <span></span></td>
                     {% for income_statement in income_statements %}
-                    <td class="gross_profit" id="gross_profit-{{ forloop.counter }}" data-field-name="gross_profit" >{{income_statement.gross_profit}}</td>
+                    <td class="gros_profit" id="gross_profit-{{ forloop.counter }}" data-field-name="gross_profit" >{{income_statement.gross_profit}}</td>
                     {% endfor %}
                 </tr>
 
@@ -748,7 +748,7 @@ function toggleEditMode(isEditing) {
     document.querySelectorAll('.editable').forEach(cell => {
         if (isEditing) {
             const value = cell.innerText.trim();
-            cell.innerHTML = `<input type="number" class="form-control" value="${value}" data-initial-value="${value}" />`;
+            cell.innerHTML = `<input type="text" class="form-control" value="${value}" data-initial-value="${value}" />`;
             const input = cell.querySelector('input');
             input.addEventListener('input', () => handleInputChange(cell));
         } else {
@@ -893,7 +893,6 @@ function calculateincomestatement() {
     calculateEBITDA();
 }
 function calculateEBITDA() {
-    setTimeout(() => {
     // Get all necessary columns (Operating Income, Depreciation and Amortization, and EBITDA)
     const operatingIncomeColumns = document.querySelectorAll('.operating_income'); // Operating Income column
     const depreciationColumns = document.querySelectorAll('.depreciation'); // Depreciation and Amortization column
@@ -909,12 +908,10 @@ function calculateEBITDA() {
         // Update the corresponding EBITDA cell
         updateCellValue(`ebitda-${index + 1}`, ebitda); // Update cell with ID 'ebitda-1', 'ebitda-2', etc.
     });
-}, 0);
 }
 
 
 function retainedearnings() {
-    setTimeout(() => {
     // Get all necessary columns (Pretax Income, Tax Provision, and Net Income)
     const netincomecshcolumns = document.querySelectorAll('.common_stock_holders'); // Pretax Income column
     const equitycolumns = document.querySelectorAll('.equity'); // Tax Provision column
@@ -930,11 +927,9 @@ function retainedearnings() {
         // Update the corresponding Net Income cell
         updateCellValue(`retained_earnings-${index + 1}`, retained); // Update cell with ID 'net_income-1', 'net_income-2', etc.
     });
-}, 0);
 }
 
 function calculateBasicEPS() {
-    setTimeout(() => {
     // Get all necessary columns (Net Income to Common Stockholders, Number of Equity Shares, and Basic EPS)
     const netIncomeColumns = document.querySelectorAll('.common_stock_holders'); // Net Income to Common Stockholders column
     const equitySharesColumns = document.querySelectorAll('.equity_shares'); // Number of Equity Shares column
@@ -950,11 +945,9 @@ function calculateBasicEPS() {
         // Update the corresponding Basic EPS cell
         updateCellValue(`basic_eps-${index + 1}`, basicEPS); // Update cell with ID 'basic_eps-1', 'basic_eps-2', etc.
     });
-}, 0);
 }
 
 function calculateNetIncometocsh() {
-    setTimeout(() => {
     // Get all necessary columns (Pretax Income, Tax Provision, and Net Income)
     const netincomecolumns = document.querySelectorAll('.net_income'); // Pretax Income column
     const sharecolumns = document.querySelectorAll('.share_dividends'); // Tax Provision column
@@ -970,13 +963,11 @@ function calculateNetIncometocsh() {
         // Update the corresponding Net Income cell
         updateCellValue(`common_stock_holders-${index + 1}`, netIncome); // Update cell with ID 'net_income-1', 'net_income-2', etc.
     });
-}, 0);
 }
 
 
 
 function calculateNetIncome() {
-    setTimeout(() => {
     // Get all necessary columns (Pretax Income, Tax Provision, and Net Income)
     const pretaxIncomeColumns = document.querySelectorAll('.pertax_income'); // Pretax Income column
     const taxProvisionColumns = document.querySelectorAll('.tax_provision'); // Tax Provision column
@@ -992,11 +983,9 @@ function calculateNetIncome() {
         // Update the corresponding Net Income cell
         updateCellValue(`net_income-${index + 1}`, netIncome); // Update cell with ID 'net_income-1', 'net_income-2', etc.
     });
-}, 0);
 }
 
 function calculatePretaxIncome() {
-    setTimeout(() => {
     // Get all necessary columns (Operating Income, Net Non Operating Interest Income/ (Expense), and Pretax Income)
     const operatingIncomeColumns = document.querySelectorAll('.operating_income'); // Operating Income column
     const netNonOperatingInterestColumns = document.querySelectorAll('.current-liabilities-column'); // Net Non Operating Interest Income/ (Expense) column
@@ -1012,10 +1001,8 @@ function calculatePretaxIncome() {
         // Update the corresponding Pretax Income cell
         updateCellValue(`pertax_income-${index + 1}`, pretaxIncome); // Update cell with ID 'pertax_income-1', 'pertax_income-2', etc.
     });
-}, 0);
 }
 function calculateOtherIncomeExpense() {
-    setTimeout(() => {
     // Get all necessary columns (Gain/Loss on Sale of Security, Special Income/Charges, Write Off, Other Non Operating Income/Expenses, and Other Income/Expense)
     const gainLossColumns = document.querySelectorAll('.gain_loss'); // Gain/Loss on Sale of Security column
     const specialIncomeColumns = document.querySelectorAll('.special_income'); // Special Income/Charges column
@@ -1035,10 +1022,8 @@ function calculateOtherIncomeExpense() {
         // Update the corresponding Other Income/Expense cell
         updateCellValue(`other_income-${index + 1}`, otherIncomeExpense); // Update cell with ID 'other_income-1', 'other_income-2', etc.
     });
-}, 0);
 }
 function calculateNetNonOperatingInterestIncomeExpense() {
-    setTimeout(() => {
     // Get all necessary columns (Interest Income Non Operating, Interest Expense Non Operating, and Net Non Operating Interest Income/Expense)
     const interestIncomeColumns = document.querySelectorAll('.income_non_operating'); // Interest Income Non Operating column
     const interestExpenseColumns = document.querySelectorAll('.expense_non_operating'); // Interest Expense Non Operating column
@@ -1054,14 +1039,12 @@ function calculateNetNonOperatingInterestIncomeExpense() {
         // Update the corresponding Net Non Operating Interest Income/Expense cell
         updateCellValue(`current-liabilities-${index + 1}`, netNonOperatingInterest); // Update cell with ID 'current-liabilities-1', 'current-liabilities-2', etc.
     });
-}, 0);
 }
 
 
 function calculateOperatingIncome() {
-    setTimeout(() => {
     // Get all necessary columns (Gross Profit, Operating Expense, and Operating Income)
-    const grossProfitColumns = document.querySelectorAll('.gross_profit'); // Gross Profit column
+    const grossProfitColumns = document.querySelectorAll('.gros_profit'); // Gross Profit column
     const operatingExpenseColumns = document.querySelectorAll('.total_non_current_assets_column'); // Operating Expense column
     const operatingIncomeColumns = document.querySelectorAll('.operating_income'); // Operating Income column
 
@@ -1075,11 +1058,9 @@ function calculateOperatingIncome() {
         // Update the corresponding Operating Income cell
         updateCellValue(`operating_income-${index + 1}`, operatingIncome); // Operating Income cell ID: 'operating_income-1', 'operating_income-2', etc.
     });
-}, 0); 
 }
 
 function calculateOperatingExpense() {
-    setTimeout(() => {
     // Get all necessary columns (SG&A Expense, R&D Expense, and Operating Expense)
     const sgaColumns = document.querySelectorAll('.net_ppe_column'); // Selling, General and Administrative Expense column
     const researchColumns = document.querySelectorAll('.research'); // Research & Development Expense column
@@ -1095,11 +1076,9 @@ function calculateOperatingExpense() {
         // Update the corresponding Operating Expense cell
         updateCellValue(`total_non_current_assets-${index + 1}`, operatingExpense); // Operating Expense cell ID: 'total_non_current_assets-1', 'total_non_current_assets-2', etc.
     });
-}, 0);
 }
 
 function calculateSGA() {
-    setTimeout(() => {
     // Get all necessary columns (General & Administrative, Selling and Marketing, and SG&A Expense)
     const generalAdministrativeColumns = document.querySelectorAll('.general_administrative'); // General & Administrative Expenses column
     const sellingMarketingColumns = document.querySelectorAll('.selling_markting'); // Selling and Marketing Expense column
@@ -1115,12 +1094,10 @@ function calculateSGA() {
         // Update the corresponding SG&A Expense cell
         updateCellValue(`net_ppe-${index + 1}`, sgaExpense); // SG&A Expense cell ID: 'net_ppe-1', 'net_ppe-2', etc.
     });
-}, 0);
 }
 
 
 function calculatetotalrevenue() {
-    setTimeout(() => {
     // Get all necessary columns (Operating Revenue, Other Income/Expense, and Total Revenue)
     const operatingRevenueColumns = document.querySelectorAll('.operating_revenue'); // Operating Revenue column
     const otherIncomeColumns = document.querySelectorAll('.other_income'); // Other Income/Expense column
@@ -1136,34 +1113,34 @@ function calculatetotalrevenue() {
         // Update the corresponding Total Revenue cell
         updateCellValue(`total_assets-${index + 1}`, totalRevenue); // Total Revenue cell ID: 'total_assets-1', 'total_assets-2', etc.
     });
-}, 0);
 }
 
 function calculategrossProfit() {
-    setTimeout(() => {
-        // Get all necessary columns (Total Revenue, Cost of Revenue, and Gross Profit)
-        const totalRevenue = document.querySelectorAll('.total_revenue');
-        const costOfRevenueColumns = document.querySelectorAll('.cost_of_revenue');
-        const grossProfitColumns = document.querySelectorAll('.gross_profit');
+    // Get all necessary columns (Total Revenue, Cost of Revenue, and Gross Profit)
+    const totalRevenueColumns = document.querySelectorAll('.total_revenue'); // Total Revenue column
+    const costOfRevenueColumns = document.querySelectorAll('.cost_of_revenue'); // Cost of Revenue column
+    const grossProfitColumns = document.querySelectorAll('.gros_profit'); // Gross Profit column
+
+    // Loop through each row to calculate Gross Profit
+    totalRevenueColumns.forEach((totalRevenueCell, index) => {
+        const totalRevenue = getCellValue(totalRevenueCell); // Get the Total Revenue value
+        const costOfRevenue = getCellValue(costOfRevenueColumns[index]); // Get the Cost of Revenue value
+        console.log(totalRevenue,'totalRevenue')
+        console.log(costOfRevenue,'costOfRevenue')
+
         
-        totalRevenue.forEach((totalRevenueCell, index) => {
-            const totalRevenue = getCellValue(totalRevenueCell);
-            const costOfRevenue = getCellValue(costOfRevenueColumns[index]);
-            
-            console.log(totalRevenue, 'totalRevenue');
-            console.log(costOfRevenue, 'costOfRevenue');
-            
-            const grossProfit = totalRevenue - costOfRevenue;
-            updateCellValue(`gross_profit-${index + 1}`, grossProfit);
-        });
-    }, 0);  // Delay the execution to ensure complete input
+        const grossProfit = totalRevenue - costOfRevenue; // Calculate Gross Profit
+
+        // Update the corresponding Gross Profit cell
+        updateCellValue(`gross_profit-${index + 1}`, grossProfit); // Gross Profit cell ID: 'gross_profit-1', 'gross_profit-2', etc.
+    });
 }
+
 function getCellValue(cell) {
     const input = cell.querySelector('input');
     const value = input ? input.value : cell.innerText;
-    return parseFloat(value.trim()) || 0;
+    return parseFloat(value.trim()) || 0; // Ensure valid numeric value
 }
-
 
 function updateCellValue(cellId, value) {
     const cell = document.getElementById(cellId);
